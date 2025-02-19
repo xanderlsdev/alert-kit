@@ -107,6 +107,10 @@ class AlertKit {
 
     show(options: Options) {
         this._message = options.message;
+        // Cerrar alerta actual si existe
+        if(this.overlay) {
+            this.overlay.remove();
+        }
 
         // Agregar las opciones personalizadas al objeto
         this.settings = this.createDataDefaults(options);
@@ -114,11 +118,11 @@ class AlertKit {
         // Obtener el elemento activo del documento
         this.previousActiveElement = this.getActiveElement() as HTMLElement;
 
+        // Crear el elemento contenedor del modal
+        this.overlay = this.createContainer();
+
         // Se agrega un elemento de trapeo de foco para los modales de tipo loading
         if (this.settings.type === 'loading') {
-            // Crear el elemento contenedor del modal
-            this.overlay = this.createContainer();
-
             // Crear el elemento contenido del modal
             this.alertBox = this.createSpinner();
 
@@ -134,9 +138,6 @@ class AlertKit {
             // Agregar el contenido del modal al contenedor
             this.overlay.appendChild(this.alertBox);
         } else {
-            // Crear el elemento contenedor del modal
-            this.overlay = this.createContainer();
-
             // Crear el elemento contenido del modal
             this.alertBox = this.createContent();
 
@@ -235,40 +236,43 @@ class AlertKit {
     }
 
     close(callback?: () => void) {
-        if (!this.overlay) return;
+        if (!this.overlay && !this.alertBox) return;
 
-        if (this.alertBox) {
-            this.alertBox.classList.add('alert-kit-closing');
-            this.alertBox.addEventListener('animationend', () => {
-                if (document.body.contains(this.overlay)) {
-                    document.body.removeChild(this.overlay!);
-                    document.body.style.overflow = 'auto';
+        this.alertBox!.classList.add('alert-kit-closing');
+        this.alertBox!.addEventListener('animationend', () => {
 
-                    document.removeEventListener('keydown', this.boundEscapeHandler);
-                    document.removeEventListener('keydown', this.boundFocusHandler);
-                    this.overlay!.removeEventListener('mousedown', this.boundClickOutSideHandler);
-                    window.removeEventListener('focus', this.boundFocusInSideHandler);
+            document.removeEventListener('keydown', this.boundEscapeHandler);
+            document.removeEventListener('keydown', this.boundFocusHandler);
+            this.overlay!.removeEventListener('mousedown', this.boundClickOutSideHandler);
+            window.removeEventListener('focus', this.boundFocusInSideHandler);
 
-                    this.header?.removeEventListener('mousedown', this.boundMouseDownHandler);
-                    document.removeEventListener('mousemove', this.boundMouseMoveHandler);
-                    document.removeEventListener('mouseup', this.boundMouseUpHandler);
+            this.header?.removeEventListener('mousedown', this.boundMouseDownHandler);
+            document.removeEventListener('mousemove', this.boundMouseMoveHandler);
+            document.removeEventListener('mouseup', this.boundMouseUpHandler);
 
-                    if (this.previousActiveElement) {
-                        this.previousActiveElement.focus();
-                    }
+            // Limpiar timeout si existe
+            if (this.closeTimeout) {
+                clearTimeout(this.closeTimeout);
+                this.closeTimeout = null;
+            }
 
-                    this.settings?.onClose?.();
-                }
+            this.overlay!.remove();
+            document.body.style.overflow = 'auto';
 
-                // Limpiar timeout si existe
-                if (this.closeTimeout) {
-                    clearTimeout(this.closeTimeout);
-                    this.closeTimeout = null;
-                }
+            this.overlay = null;
+            this.alertBox = null;
 
-                callback?.();
-            });
-        }
+            this.isDraggingHeader = false;
+            this.offsetX = 0;
+            this.offsetY = 0;
+
+            if (this.previousActiveElement) {
+                this.previousActiveElement.focus();
+            }
+
+            this.settings?.onClose?.();
+            callback?.();
+        });
     }
 
     getFocusableElements(container: HTMLElement): Element[] {
@@ -427,7 +431,7 @@ class AlertKit {
             // Agrega el evento de clic, cerrando el overlay cuando se presiona el botón
             button.addEventListener('click', () => {
                 this.close(() => {
-                    buttonConfig.onClick();
+                    buttonConfig.onClick?.();
                 });
             });
 
