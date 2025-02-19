@@ -202,7 +202,7 @@ import { AlertKit, alertKit, AlertType } from "alert-kit";
 
 alertKit.show({
   title: "Alert Kit",
-  subtitle: "Subtitle",
+  subTitle: "Subtitle",
   message: "Message",
   type: AlertType.info,
   showCloseButton: true,
@@ -285,7 +285,7 @@ Alert Kit offers multiple styles for your alerts:
 | Option     | Type       | Default                      | Description                                                                                                                 |
 | ---------- | ---------- | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | `title`    | `string`   | `'Alert Title'`              | The title of the alert |
-| `subtitle`    | `string`   | `'Subtitle'`              | The subtitle of the alert |
+| `subTitle`    | `string`   | `'Subtitle'`              | The subTitle of the alert |
 | `message`  | `string`   | `'Write your message here.'` | The content of the alert |
 | `type`    | `string`   | `'info'`                    | The type of the alert message. Options: `'info'`, `'success'`, `'warning'`, `'error'`, `'question'`, `'loading'`. |
 | `showCloseButton` | `boolean` | `true`                       | Whether or not to display a close button.                                                                    |

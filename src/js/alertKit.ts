@@ -29,7 +29,7 @@ interface Button {
 
 interface Options {
     title?: string;
-    subtitle?: string;
+    subTitle?: string;
     message: string;
     type: AlertType;
     showCloseButton?: boolean;
@@ -294,7 +294,7 @@ class AlertKit {
     createDataDefaults(options: Options): Options {
         const defaults = {
             title: 'Alert',
-            subtitle: 'Subtitle',
+            subTitle: 'Subtitle',
             message: 'Message',
             type: AlertType.info,
             showCloseButton: true,
@@ -394,7 +394,7 @@ class AlertKit {
 
     createTitleElement(): HTMLHeadingElement {
         const titleElement = document.createElement('h2');
-        titleElement.textContent = this.settings!.subtitle ?? "";
+        titleElement.textContent = this.settings!.subTitle ?? "";
         return titleElement;
     }
 
