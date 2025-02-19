@@ -15,9 +15,10 @@
     justify-content: center;
     align-items: center;
     z-index: 1000;
-    backdrop-filter: blur(5px);
+    /* backdrop-filter: blur(5px); */
     font-family: inherit;
-    font-size: 0.95rem;
+    font-size: 1rem;
+    color: inherit;
 }
 
 .alert-kit-content {
@@ -50,6 +51,8 @@
     padding: 0;
     font-size: 1rem;
     line-height: 1.5rem;
+    font-weight: 400;
+    color: inherit;
 }
 
 .alert-kit-header .alert-kit-close {
@@ -114,53 +117,65 @@
 }
 
 .alert-kit-body .alert-kit-icon {
-    width: 60px;
-    height: 60px;
-    min-width: 60px;
-    border-radius: 50%;
+    /* width: 70px;
+    height: 70px;
+    min-width: 70px; */
+    /* border-radius: 50%; */
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .alert-kit-body .alert-kit-icon.error {
-    background-color: #ff4444;
+    /* background-color: #ff4444; */
+    /* border: 1px solid #ff4444; */
+    color: #ff4444;
 }
 
 .alert-kit-body .alert-kit-icon.warning {
-    background-color: #ffa500;
+    /* background-color: #ffa500; */
+    /* border: 1px solid #ffa500; */
+    color: #ffa500;
 }
 
 .alert-kit-body .alert-kit-icon.info {
-    background-color: #2196F3;
+    /* background-color: #2196F3; */
+    /* border: 1px solid #2196F3; */
+    color: #2196F3;
 }
 
 .alert-kit-body .alert-kit-icon.question {
-    background-color: #673AB7;
+    /* background-color: #7e7e7e; */
+    /* border: 1px solid #7e7e7e; */
+    color: #7e7e7e;
 }
 
 .alert-kit-body .alert-kit-icon.success {
-    background-color: #4CAF50;
+    /* background-color: #4CAF50; */
+    /* border: 1px solid #4CAF50; */
+    color: #4CAF50;
 }
 
 .alert-kit-body .alert-kit-icon svg {
-    width: 30px;
-    height: 30px;
-    fill: white;
+    width: 60px;
+    height: 60px;
+    /* color: white; */
 }
 
 .alert-kit-body h2 {
-    color: #333;
+    color: inherit;
     margin: 0;
     font-size: 1.25rem;
     line-height: 1.75rem;
+    font-weight: 600;
 }
 
 .alert-kit-body p {
-    color: #666;
+    color: inherit;
     margin: 0;
     font-size: 1rem;
     line-height: 1.5rem;
+    font-weight: 300;
 }
 
 .alert-kit-footer {
@@ -210,11 +225,11 @@
 }
 
 .alert-kit-footer button.alert-kit-button.question {
-    background-color: #673AB7;
+    background-color: #7e7e7e;
 }
 
 .alert-kit-footer button.alert-kit-button.question:hover {
-    background-color: #5E35B1;
+    background-color: #7e7e7e;
 }
 
 .alert-kit-footer button.alert-kit-button.success {
