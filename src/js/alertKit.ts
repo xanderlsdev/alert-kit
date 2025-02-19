@@ -20,7 +20,8 @@ interface Icons {
 }
 
 interface Button {
-    text: string;
+    text?: string;
+    html?: string;
     onClick: () => void;
     primary?: boolean;
     class?: string;
@@ -437,20 +438,18 @@ class AlertKit {
     }
 
     createButtonsElement(footer: HTMLDivElement) {
-        // Agregamos los botones y usamos encadenamiento opcional(?) en caso buttons se null o undefined 
         this.settings!.buttons?.forEach(buttonConfig => {
-            // Creamos el botón
             const button = document.createElement('button');
 
-            // Asigna el texto del botón
-            button.textContent = buttonConfig.text;
+            // Permite que el contenido del botón sea HTML o texto plano
+            if (buttonConfig.html) {
+                button.innerHTML = buttonConfig.html!; // Permite contenido HTML
+            } else {
+                button.textContent = buttonConfig.text!; // Usa texto si no hay HTML
+            }
 
             // Asigna la clase del botón
-            if (buttonConfig.otherClasses) {
-                button.className = buttonConfig.otherClasses;
-            } else {
-                button.className = `alert-kit-button ${buttonConfig.class ? buttonConfig.class : this.settings!.type}`;
-            }
+            button.className = buttonConfig.otherClasses || `alert-kit-button ${buttonConfig.class || this.settings!.type}`;
 
             if (buttonConfig.primary) {
                 button.setAttribute('data-primary', 'true');
