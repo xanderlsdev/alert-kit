@@ -284,6 +284,7 @@ Alert Kit offers multiple styles for your alerts:
 
 | Option     | Type       | Default                      | Description                                                                                                                 |
 | ---------- | ---------- | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `backdropBlur` | `boolean` | `true`                       | Whether or not to blur the background of the alert.
 | `title`    | `string`   | `'Alert Title'`              | The title of the alert |
 | `subTitle`    | `string`   | `'Subtitle'`              | The subTitle of the alert |
 | `message`  | `string`   | `'Write your message here.'` | The content of the alert |
@@ -292,7 +293,7 @@ Alert Kit offers multiple styles for your alerts:
 | `closeOnEsc` | `boolean` | `true`                       | Whether or not to close the alert when the user presses the Esc key.                                                                    |
 | `closeOnClickOutside` | `boolean` | `true`                       | Whether or not to close the alert when the user clicks outside of it.                                                                    |
 | `isMoveable` | `boolean` | `true`                       | Whether or not to allow the user to move the alert.
-| `buttons` | `array` | `[{text: 'Accept', onClick: () => { }, primary: true}]`                       | An array of buttons to display in the alert.                                                                    |
+| `buttons` | `array` | `[{text: 'Accept' html: '<span>Accept</span>', onClick: () => { }, primary: true}]`                       | An array of buttons to display in the alert.
 | `autoClose` | `boolean` | `false`                       | Whether or not to automatically close the alert after a specified time.
 | `autoCloseTime` | `number` | `3000`                       | The time in milliseconds to wait before automatically closing the alert.                                                                    |
 | `onOpen` | `function` | `undefined`                  | Callback function that is called when the alert is opened.                                                                  |

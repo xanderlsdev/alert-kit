@@ -29,6 +29,7 @@ interface Button {
 }
 
 interface Options {
+    backdropBlur?: boolean;
     title?: string;
     subTitle?: string;
     message: string;
@@ -326,6 +327,7 @@ class AlertKit {
 
     createDataDefaults(options: Options): Options {
         const defaults = {
+            backdropBlur: true,
             title: 'Alert',
             subTitle: 'Subtitle',
             message: 'Message',
@@ -348,7 +350,10 @@ class AlertKit {
 
     createContainer() {
         const container = document.createElement('div');
-        container.className = 'alert-kit-overlay';
+        container.classList.add('alert-kit-overlay');
+        if (this.settings!.backdropBlur) {
+            container.classList.add('alert-kit-backdrop-blur');
+        }
         return container;
     }
 
