@@ -15,10 +15,10 @@ npm install alert-kit
 You can quickly create an alert message by calling the `show` method and passing an object with the desired options:
 
 ```javascript
-import { CustomAlert, customAlert } from "alert-kit";
+import {  AlertKit, alertKit} from "alert-kit";
 
 // Success alert
-customAlert.show({
+alertKit.show({
   type: "success",
   title: "Alert Kit",
   subTitle: "Success",
@@ -33,7 +33,7 @@ customAlert.show({
 });
 
 // Information alert
-customAlert.show({
+alertKit.show({
   type: "info",
   title: "Alert Kit",
   subTitle: "Information",
@@ -47,7 +47,7 @@ customAlert.show({
 });
 
 // Warning alert
-customAlert.show({
+alertKit.show({
   type: "warning",
   title: "Alert Kit",
   subTitle: "Warning",
@@ -55,7 +55,7 @@ customAlert.show({
 });
 
 // Error alert
-customAlert.show({
+alertKit.show({
   type: "error",
   title: "Alert Kit",
   subTitle: "Error",
@@ -63,7 +63,7 @@ customAlert.show({
 });
 
 // Question alert
-customAlert.show({
+alertKit.show({
   type: "question",
   title: "Alert Kit",
   subTitle: "Question",
@@ -76,7 +76,7 @@ customAlert.show({
     {
       text: "Yes",
       onClick: () => {
-        customAlert.show({
+        alertKit.show({
           message: "Ok",
         });
       },
@@ -91,7 +91,7 @@ customAlert.show({
 });
 
 // Loading alert
-customAlert.show({
+alertKit.show({
   type: "loading",
   message: `Please wait 3 seconds...`,
   showCloseButton: false,
@@ -109,7 +109,7 @@ customAlert.show({
 });
 
 // Loading alert with callback
-customAlert.show({
+alertKit.show({
   type: "loading",
   message: `Loading api data...`,
   showCloseButton: false,
@@ -118,7 +118,7 @@ customAlert.show({
   autoClose: false,
   buttons: [],
   onClose: () => {
-    customAlert.show({
+    alertKit.show({
       message: "Finished loading",
       type: "success",
     });
@@ -126,7 +126,7 @@ customAlert.show({
 });
 
 setTimeout(() => {
-  customAlert.close();
+  alertKit.close();
 }, 5000);
 
 // Load Bootstrap CSS dinamically
@@ -137,7 +137,7 @@ bootstrapCSS.href =
 bootstrapCSS.setAttribute("data-bootstrap", "");
 document.head.appendChild(bootstrapCSS);
 
-customAlert.show({
+alertKit.show({
   type: "info",
   title: "SysSoftIntegra",
   subTitle: "Information",
@@ -168,7 +168,7 @@ tailwindCSS.href =
 tailwindCSS.setAttribute("data-tailwind", "");
 document.head.appendChild(tailwindCSS);
 
-customAlert.show({
+alertKit.show({
   type: "info",
   title: "SysSoftIntegra",
   subTitle: "Information",
@@ -198,9 +198,9 @@ customAlert.show({
 Customize your alerts with a variety of options by passing an object to the `alertKit` method:
 
 ```javascript
-import { CustomAlert, customAlert, AlertType } from "alert-kit";
+import { AlertKit, alertKit, AlertType } from "alert-kit";
 
-customAlert.show({
+alertKit.show({
   title: "Alert Kit",
   subtitle: "Subtitle",
   message: "Message",
