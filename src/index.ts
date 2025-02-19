@@ -1,10 +1,10 @@
 // src/index.js
-import CustomAlert, { AlertType } from './js/customAlert.js';
+import AlertKit, { AlertType } from './js/alertKit.js';
 
-const customAlert = new CustomAlert();
+const alertKit = new AlertKit();
 
 // if (typeof window !== 'undefined') {
 //     window.customAlert = customAlert;
 // }
 
-export { CustomAlert, customAlert, AlertType };
+export { AlertKit, alertKit, AlertType };

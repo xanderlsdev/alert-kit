@@ -263,6 +263,10 @@ Alert Kit offers multiple styles for your alerts:
 
 <img src="example/error.webp" alt="Solid Style" width="300" />
 
+### Question
+
+<img src="example/question.webp" alt="Solid Style" width="300" />
+
 ### Loading
 
 <img src="example/loading.webp" alt="Solid Style" width="300" />

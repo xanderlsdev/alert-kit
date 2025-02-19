@@ -43,9 +43,9 @@ interface Options {
     onClose?: () => void;
 }
 
-class CustomAlert {
+class AlertKit {
 
-    static instance: CustomAlert;
+    static instance: AlertKit;
 
     private icons: Icons;
     private focusableElements: HTMLElement[] = [];
@@ -76,12 +76,12 @@ class CustomAlert {
         this.icons = this.generateIcons();
 
         // Si la instancia ya existe, evitar la creación de una nueva
-        if (CustomAlert.instance) {
-            return CustomAlert.instance;
+        if (AlertKit.instance) {
+            return AlertKit.instance;
         }
 
         // Crear un método estático para acceder a la instancia
-        CustomAlert.instance = this;
+        AlertKit.instance = this;
 
         // Crear funciones de tratamiento de eventos
         this.boundEscapeHandler = this.trapEscKey.bind(this);
@@ -504,7 +504,7 @@ class CustomAlert {
     }
 
     static getInstance() {
-        return CustomAlert.instance;
+        return AlertKit.instance;
     }
 
     get message(): string {
@@ -517,4 +517,4 @@ class CustomAlert {
     }
 }
 
-export default CustomAlert;
+export default AlertKit;
