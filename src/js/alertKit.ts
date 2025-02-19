@@ -24,15 +24,54 @@ interface Button {
     html?: string;
     onClick: () => void;
     primary?: boolean;
-    class?: string;
-    otherClasses?: string;
+    type?: 'error' | 'warning' | 'info' | 'question' | 'success';
+    class?: string[];
+    style?: string;
 }
 
 interface Options {
+    overlayClass?: string[];
+    overlayStyle?: string;
     backdropBlur?: boolean;
+
+    contentClass?: string[];
+    contentStyle?: string;
+
+    headerVisible?: boolean;
+    headerClass?: string[];
+    headerStyle?: string;
+
+    headerTitleClass?: string[];
+    headerTitleStyle?: string;
+    headerTitleInnerHTML?: string;
+
+    headerCloseButtonClass?: string[];
+    headerCloseButtonStyle?: string;
+    headerCloseButtonInnerHTML?: string;
+
+    bodyClass?: string[];
+    bodyStyle?: string;
+    bodyInnerHTML?: string;
+
+    bodyIconClass?: string[];
+    bodyIconStyle?: string;
+    bodyIconInnerHTML?: string;
+
+    bodyTitleClass?: string[];
+    bodyTitleStyle?: string;
+    bodyTitleInnerHTML?: string;
+
+    bodyMessageClass?: string[];
+    bodyMessageStyle?: string;
+    bodyMessageInnerHTML?: string;
+
+    footerClass?: string[];
+    footerStyle?: string;
+    footerInnerHTML?: string;
+
+    headerTitle?: string;
     title?: string;
-    subTitle?: string;
-    message: string;
+    message?: string;
     type: AlertType;
     showCloseButton?: boolean;
     closeOnEsc?: boolean;
@@ -130,13 +169,17 @@ class AlertKit {
                 <path d="M9.09 9a3 3 0 1 1 3.91 2.86c-.66.23-1 1-1 1.64V15"></path>
                 <circle cx="12" cy="18" r="0.5"></circle>
             </svg>
-            `,
-            loading: '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-2h2v2h-2zm0-13v9h2v-9h-2z" class="alert-kit-loading-spinner"/>',
+        `,
+            loading: `
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-2h2v2h-2zm0-13v9h2v-9h-2z" class="alert-kit-loading-spinner"/>
+            </svg>
+        `,
         };
     }
 
     show(options: Options) {
-        this._message = options.message;
+        this._message = options.message || '';
         // Cerrar alerta actual si existe
         if (this.overlay) {
             this.overlay.remove();
@@ -154,7 +197,7 @@ class AlertKit {
         // Se agrega un elemento de trapeo de foco para los modales de tipo loading
         if (this.settings.type === 'loading') {
             // Crear el elemento contenido del modal
-            this.alertBox = this.createSpinner();
+            this.alertBox = this.createContentSpinner();
 
             const spinner = document.createElement('div');
             spinner.className = 'alert-kit-loading-spinner';
@@ -169,7 +212,7 @@ class AlertKit {
             this.overlay.appendChild(this.alertBox);
         } else {
             // Crear el elemento contenido del modal
-            this.alertBox = this.createContent();
+            this.alertBox = this.createContentBox();
 
             // Crear la cabecera del modal
             this.header = this.createHeader();
@@ -186,18 +229,22 @@ class AlertKit {
                 document.addEventListener('mousemove', this.boundMouseMoveHandler);
                 document.addEventListener('mouseup', this.boundMouseUpHandler);
             }
-
+            if (!this.settings.headerVisible) {
+                this.header.style.display = 'none';
+            }
             this.alertBox.appendChild(this.header);
 
             // Crear el cuerpo del modal
             const body = this.createBody();
-            // Agregar el icono al cuerpo del modal
-            body.appendChild(this.createIconElement());
-            // Agregar el contenido de los titulos al cuerpo del modal
-            const bodyContent = document.createElement('div');
-            bodyContent.appendChild(this.createTitleElement());
-            bodyContent.appendChild(this.createMessageElement());
-            body.appendChild(bodyContent);
+            if (!this.settings.bodyInnerHTML) {
+                // Agregar el icono al cuerpo del modal
+                body.appendChild(this.createIconElement());
+                // Agregar el contenido de los titulos al cuerpo del modal
+                const bodyContent = document.createElement('div');
+                bodyContent.appendChild(this.createTitleElement());
+                bodyContent.appendChild(this.createMessageElement());
+                body.appendChild(bodyContent);
+            }
             this.alertBox.appendChild(body);
 
             // Crear el pie de pagina del modal
@@ -241,7 +288,9 @@ class AlertKit {
         document.addEventListener('keydown', this.boundFocusHandler);
 
         // Si no es un modal de tipo loading, se enfoca el primer botón si existe o el primer elemento focalizable
-        if (this.settings.type !== 'loading') {
+        if (this.settings.type === AlertType.loading) {
+            this.firstFocusableElement.focus();
+        } else {
             if (this.settings.buttons && this.settings.buttons.length > 0) {
                 const focusButton = Array.from(this.alertBox.querySelectorAll("button")).find(element => element.getAttribute('data-primary'));
                 if (focusButton) {
@@ -302,7 +351,7 @@ class AlertKit {
 
             this.settings?.onClose?.();
             callback?.();
-        });
+        }, { once: true });
     }
 
     getFocusableElements(container: HTMLElement): Element[] {
@@ -327,9 +376,10 @@ class AlertKit {
 
     createDataDefaults(options: Options): Options {
         const defaults = {
+            headerVisible: true,
             backdropBlur: true,
-            title: 'Alert',
-            subTitle: 'Subtitle',
+            headerTitle: 'Alert',
+            title: 'Subtitle',
             message: 'Message',
             type: AlertType.info,
             showCloseButton: true,
@@ -339,27 +389,55 @@ class AlertKit {
             buttons: [{
                 text: 'Accept',
                 onClick: () => { },
-                primary: true
+                primary: true,
+                type: 'info',
             }],
             autoClose: false,
             autoCloseTime: 3000,
-        };
+        } as Options;
 
         return { ...defaults, ...options };
     }
 
     createContainer() {
         const container = document.createElement('div');
-        container.classList.add('alert-kit-overlay');
+        container.className = 'alert-kit-overlay';
+
+        if (this.settings!.overlayClass) {
+            this.settings!.overlayClass.forEach((className) => {
+                if (className.trim().length !== 0) {
+                    container.classList.add(className.trim());
+                }
+            });
+        }
+
+        if (this.settings!.overlayStyle) {
+            container.setAttribute('style', this.settings!.overlayStyle);
+        }
+
         if (this.settings!.backdropBlur) {
             container.classList.add('alert-kit-backdrop-blur');
         }
+
         return container;
     }
 
-    createContent() {
+    createContentBox() {
         const content = document.createElement('div');
         content.className = 'alert-kit-content';
+
+        if (this.settings!.contentClass) {
+            this.settings!.contentClass.forEach((className) => {
+                if (className.trim().length !== 0) {
+                    content.classList.add(className.trim());
+                }
+            });
+        }
+
+        if (this.settings!.contentStyle) {
+            content.setAttribute('style', this.settings!.contentStyle);
+        }
+
         content.setAttribute('tabindex', '-1');
         content.setAttribute('role', 'dialog');
         content.setAttribute('aria-modal', 'true');
@@ -368,15 +446,28 @@ class AlertKit {
         return content;
     }
 
-    createSpinner() {
-        const spinner = document.createElement('div');
-        spinner.className = 'alert-kit-loading-container';
-        spinner.setAttribute('tabindex', '-1');
-        spinner.setAttribute('role', 'dialog');
-        spinner.setAttribute('aria-modal', 'true');
-        spinner.setAttribute('aria-labelledby', 'alertTitle');
-        spinner.setAttribute('aria-describedby', 'alertMessage');
-        return spinner;
+    createContentSpinner() {
+        const content = document.createElement('div');
+        content.className = 'alert-kit-loading-container';
+
+        if (this.settings!.contentClass) {
+            this.settings!.contentClass.forEach((className) => {
+                if (className.trim().length !== 0) {
+                    content.classList.add(className.trim());
+                }
+            });
+        }
+
+        if (this.settings!.contentStyle) {
+            content.setAttribute('style', this.settings!.contentStyle);
+        }
+
+        content.setAttribute('tabindex', '-1');
+        content.setAttribute('role', 'dialog');
+        content.setAttribute('aria-modal', 'true');
+        content.setAttribute('aria-labelledby', 'alertTitle');
+        content.setAttribute('aria-describedby', 'alertMessage');
+        return content;
     }
 
     getActiveElement(): Element | null {
@@ -385,24 +476,75 @@ class AlertKit {
 
     createHeader(): HTMLDivElement {
         const elementHeader = document.createElement('div');
-        elementHeader.classList.add('alert-kit-header');
+        elementHeader.className = 'alert-kit-header';
+
         if (this.settings!.isMoveable) {
             elementHeader.classList.add('alert-kit-cursor-move');
         }
+
+        if (this.settings!.headerClass) {
+            this.settings!.headerClass.forEach((className) => {
+                if (className.trim().length !== 0) {
+                    elementHeader.classList.add(className.trim());
+                }
+            });
+        }
+
+        if (this.settings!.headerStyle) {
+            elementHeader.setAttribute('style', this.settings!.headerStyle);
+        }
+
         return elementHeader;
     }
 
     createTitleHeader(): HTMLParagraphElement {
         const title = document.createElement('p');
-        title.textContent = this.settings!.title ?? "";
+
+        if (this.settings!.headerTitleClass) {
+            this.settings!.headerTitleClass.forEach((className) => {
+                if (className.trim().length !== 0) {
+                    title.classList.add(className.trim());
+                }
+            });
+        }
+
+        if (this.settings!.headerTitleStyle) {
+            title.setAttribute('style', this.settings!.headerTitleStyle);
+        }
+
+        if (this.settings!.headerTitleInnerHTML) {
+            title.innerHTML = this.settings!.headerTitleInnerHTML;
+        } else {
+            title.textContent = this.settings!.headerTitle ?? "";
+        }
+
         return title;
     }
 
     createCloseButtonHeader(): HTMLButtonElement {
         const closeButton = document.createElement('button');
         closeButton.className = 'alert-kit-close';
-        closeButton.innerHTML = '×';
+
+        if (this.settings!.headerTitleClass) {
+            this.settings!.headerTitleClass.forEach((className) => {
+                if (className.trim().length !== 0) {
+                    closeButton.classList.add(className.trim());
+                }
+            });
+        }
+
+        if (this.settings!.headerTitleStyle) {
+            closeButton.setAttribute('style', this.settings!.headerTitleStyle);
+        }
+
         closeButton.setAttribute('aria-label', 'Close alert');
+
+        if (this.settings!.headerCloseButtonInnerHTML) {
+            closeButton.innerHTML = this.settings!.headerCloseButtonInnerHTML;
+        } else {
+            closeButton.innerHTML = '×';
+        }
+
         closeButton.addEventListener('click', () => this.close());
         return closeButton;
     }
@@ -410,35 +552,124 @@ class AlertKit {
     createBody(): HTMLDivElement {
         const body = document.createElement('div');
         body.className = 'alert-kit-body';
+
+        if (this.settings!.bodyClass) {
+            this.settings!.bodyClass.forEach((className) => {
+                if (className.trim().length !== 0) {
+                    body.classList.add(className.trim());
+                }
+            });
+        }
+
+        if (this.settings!.bodyStyle) {
+            body.setAttribute('style', this.settings!.bodyStyle);
+        }
+
+        if (this.settings!.bodyInnerHTML) {
+            body.innerHTML = this.settings!.bodyInnerHTML;
+        }
+
         return body;
     }
 
     creteFooter(): HTMLDivElement {
         const footer = document.createElement('div');
         footer.className = 'alert-kit-footer';
+
+        if (this.settings!.footerClass) {
+            this.settings!.footerClass.forEach((className) => {
+                if (className.trim().length !== 0) {
+                    footer.classList.add(className.trim());
+                }
+            });
+        }
+
+        if (this.settings!.footerStyle) {
+            footer.setAttribute('style', this.settings!.footerStyle);
+        }
+
+        if (this.settings!.footerInnerHTML) {
+            footer.innerHTML = this.settings!.footerInnerHTML;
+        }
+
         return footer;
     }
 
     createIconElement(): HTMLDivElement {
         const iconContainer = document.createElement('div');
         iconContainer.className = `alert-kit-icon ${this.settings!.type}`;
-        iconContainer.innerHTML = `
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-                ${this.icons[this.settings!.type]}
-            </svg>
-        `;
+
+        if (this.settings!.bodyIconClass) {
+            this.settings!.bodyIconClass.forEach((className) => {
+                if (className.trim().length !== 0) {
+                    iconContainer.classList.add(className.trim());
+                }
+            });
+        }
+
+        if (this.settings!.bodyIconStyle) {
+            iconContainer.setAttribute('style', this.settings!.bodyIconStyle);
+        }
+
+        if (this.settings!.bodyIconInnerHTML) {
+            iconContainer.innerHTML = this.settings!.bodyIconInnerHTML;
+        } else {
+            iconContainer.innerHTML = this.icons[this.settings!.type];
+            const svg = iconContainer.querySelector('svg');
+            if (svg) {
+                svg.style.width = '60px';
+                svg.style.height = '60px';
+            }
+        }
+
         return iconContainer;
     }
 
     createTitleElement(): HTMLHeadingElement {
         const titleElement = document.createElement('h2');
-        titleElement.textContent = this.settings!.subTitle ?? "";
+
+        if (this.settings!.bodyTitleClass) {
+            this.settings!.bodyTitleClass.forEach((className) => {
+                if (className.trim().length !== 0) {
+                    titleElement.classList.add(className.trim());
+                }
+            });
+        }
+
+        if (this.settings!.bodyTitleStyle) {
+            titleElement.setAttribute('style', this.settings!.bodyTitleStyle);
+        }
+
+        if (this.settings!.bodyTitleInnerHTML) {
+            titleElement.innerHTML = this.settings!.bodyTitleInnerHTML;
+        } else {
+            titleElement.textContent = this.settings!.title ?? "";
+        }
+
         return titleElement;
     }
 
     createMessageElement(): HTMLParagraphElement {
-        this.messageElement = document.createElement('p');
-        this.messageElement.textContent = this.message;
+        this.messageElement = document.createElement('p') as HTMLParagraphElement;
+
+        if (this.settings!.bodyMessageClass) {
+            this.settings!.bodyMessageClass.forEach((className) => {
+                if (className.trim().length !== 0) {
+                    this.messageElement!.classList.add(className.trim());
+                }
+            });
+        }
+
+        if (this.settings!.bodyMessageStyle) {
+            this.messageElement.setAttribute('style', this.settings!.bodyMessageStyle);
+        }
+
+        if (this.settings!.bodyMessageInnerHTML) {
+            this.messageElement.innerHTML = this.settings!.bodyMessageInnerHTML;
+        } else {
+            this.messageElement.textContent = this.message;
+        }
+
         return this.messageElement;
     }
 
@@ -454,7 +685,19 @@ class AlertKit {
             }
 
             // Asigna la clase del botón
-            button.className = buttonConfig.otherClasses || `alert-kit-button ${buttonConfig.class || this.settings!.type}`;
+            if (buttonConfig.class) {
+                buttonConfig.class.forEach(className => {
+                    if (className.trim().length !== 0) {
+                        button.classList.add(className.trim());
+                    }
+                });
+            } else {
+                button.className = `alert-kit-button ${buttonConfig.type}`;
+            }
+
+            if (buttonConfig.style) {
+                button.setAttribute('style', buttonConfig.style);
+            }
 
             if (buttonConfig.primary) {
                 button.setAttribute('data-primary', 'true');
@@ -510,8 +753,20 @@ class AlertKit {
     }
 
     trapInSideFocus() {
-        if (this.overlay && this.alertBox) {
-            this.alertBox.focus();
+        if (!this.overlay) return;
+
+        if (this.settings!.type === AlertType.loading) {
+            this.firstFocusableElement?.focus();
+        } else {
+            this.alertBox!.focus();
+            if (this.settings!.buttons && this.settings!.buttons.length > 0) {
+                const focusButton = Array.from(this.alertBox!.querySelectorAll("button")).find(element => element.getAttribute('data-primary'));
+                if (focusButton) {
+                    focusButton.focus();
+                }
+            } else {
+                this.firstFocusableElement?.focus();
+            }
         }
     }
 
