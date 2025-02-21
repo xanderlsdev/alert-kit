@@ -1,7 +1,7 @@
 // src/js/customAlert.js
 import "../css/style.css";
 
-export enum AlertType {
+export enum AlertKitType {
     error = 'error',
     warning = 'warning',
     info = 'info',
@@ -19,7 +19,7 @@ interface Icons {
     success: string;
 }
 
-interface Button {
+export type AlertKitButton = {
     text?: string;
     html?: string;
     onClick: () => void;
@@ -29,7 +29,7 @@ interface Button {
     style?: string;
 }
 
-interface Options {
+export type AlertKitOptions = {
     overlayClass?: string[];
     overlayStyle?: string;
     backdropBlur?: boolean;
@@ -72,12 +72,12 @@ interface Options {
     headerTitle?: string;
     title?: string;
     message?: string;
-    type: AlertType;
+    type?: AlertKitType;
     showCloseButton?: boolean;
     closeOnEsc?: boolean;
     closeOnClickOutside?: boolean;
     isMoveable?: boolean;
-    buttons?: Button[];
+    buttons?: AlertKitButton[];
     autoClose?: boolean;
     autoCloseTime?: number;
     onOpen?: () => void;
@@ -88,6 +88,8 @@ class AlertKit {
 
     static instance: AlertKit;
 
+    private _name: string = 'Alert Kit';
+    private _version: string = '2.0.2';
     private icons: Icons;
     private focusableElements: HTMLElement[] = [];
     private firstFocusableElement: HTMLElement | null = null;
@@ -99,7 +101,7 @@ class AlertKit {
     private alertBox: HTMLElement | null = null;
     private header: HTMLElement | null = null;
     private _message: string = '';
-    private settings: Options | null = null;
+    private settings: AlertKitOptions | null = null;
     private boundEscapeHandler: (e: KeyboardEvent) => void = () => { };
     private boundFocusHandler: (e: KeyboardEvent) => void = () => { };
     private boundFocusInSideHandler: () => void = () => { };
@@ -178,7 +180,7 @@ class AlertKit {
         };
     }
 
-    show(options: Options) {
+    show(options: AlertKitOptions) {
         this._message = options.message || '';
         // Cerrar alerta actual si existe
         if (this.overlay) {
@@ -288,7 +290,7 @@ class AlertKit {
         document.addEventListener('keydown', this.boundFocusHandler);
 
         // Si no es un modal de tipo loading, se enfoca el primer botón si existe o el primer elemento focalizable
-        if (this.settings.type === AlertType.loading) {
+        if (this.settings.type === AlertKitType.loading) {
             this.firstFocusableElement.focus();
         } else {
             if (this.settings.buttons && this.settings.buttons.length > 0) {
@@ -314,14 +316,14 @@ class AlertKit {
         window.addEventListener('focus', this.boundFocusInSideHandler);
     }
 
-    information(options: Options, callback?: () => void) {
+    information(options: AlertKitOptions, callback?: () => void) {
         const defaults = {
             headerVisible: true,
             backdropBlur: true,
-            headerTitle: 'Alert',
+            headerTitle: this.name,
             title: 'Information',
             message: 'Message',
-            type: AlertType.info,
+            type: AlertKitType.info,
             showCloseButton: true,
             closeOnEsc: true,
             closeOnClickOutside: true,
@@ -330,23 +332,23 @@ class AlertKit {
                 text: 'Ok',
                 onClick: () => callback,
                 primary: true,
-                type: AlertType.info,
+                type: AlertKitType.info,
             }],
             autoClose: false,
             autoCloseTime: 0,
-        } as Options;
+        } as AlertKitOptions;
 
         this.show({ ...defaults, ...options });
     }
 
-    success(options: Options, callback?: () => void) {
+    success(options: AlertKitOptions, callback?: () => void) {
         const defaults = {
             headerVisible: true,
             backdropBlur: true,
-            headerTitle: 'Alert',
+            headerTitle: this.name,
             title: 'Success',
             message: 'Message',
-            type: AlertType.success,
+            type: AlertKitType.success,
             showCloseButton: true,
             closeOnEsc: true,
             closeOnClickOutside: true,
@@ -355,23 +357,23 @@ class AlertKit {
                 text: 'Ok',
                 onClick: () => callback?.(),
                 primary: true,
-                type: AlertType.success,
+                type: AlertKitType.success,
             }],
             autoClose: false,
             autoCloseTime: 0,
-        } as Options;
+        } as AlertKitOptions;
 
         this.show({ ...defaults, ...options });
     }
 
-    warning(options: Options, callback?: () => void) {
+    warning(options: AlertKitOptions, callback?: () => void) {
         const defaults = {
             headerVisible: true,
             backdropBlur: true,
-            headerTitle: 'Alert',
+            headerTitle: this.name,
             title: 'Warning',
             message: 'Message',
-            type: AlertType.warning,
+            type: AlertKitType.warning,
             showCloseButton: true,
             closeOnEsc: true,
             closeOnClickOutside: true,
@@ -380,23 +382,23 @@ class AlertKit {
                 text: 'Ok',
                 onClick: () => callback?.(),
                 primary: true,
-                type: AlertType.warning,
+                type: AlertKitType.warning,
             }],
             autoClose: false,
             autoCloseTime: 0,
-        } as Options;
+        } as AlertKitOptions;
 
         this.show({ ...defaults, ...options });
     }
 
-    error(options: Options, callback?: () => void) {
+    error(options: AlertKitOptions, callback?: () => void) {
         const defaults = {
             headerVisible: true,
             backdropBlur: true,
-            headerTitle: 'Alert',
+            headerTitle: this.name,
             title: 'Error',
             message: 'Message',
-            type: AlertType.error,
+            type: AlertKitType.error,
             showCloseButton: true,
             closeOnEsc: true,
             closeOnClickOutside: true,
@@ -405,23 +407,23 @@ class AlertKit {
                 text: 'Ok',
                 onClick: () => callback?.(),
                 primary: true,
-                type: AlertType.error,
+                type: AlertKitType.error,
             }],
             autoClose: false,
             autoCloseTime: 0,
-        } as Options;
+        } as AlertKitOptions;
 
         this.show({ ...defaults, ...options });
     }
 
-    question(options: Options, callback?: (value: boolean) => void) {
+    question(options: AlertKitOptions, callback?: (value: boolean) => void) {
         const defaults = {
             headerVisible: true,
             backdropBlur: true,
-            headerTitle: 'Alert',
+            headerTitle: this.name,
             title: 'Question',
             message: 'Message',
-            type: AlertType.question,
+            type: AlertKitType.question,
             showCloseButton: true,
             closeOnEsc: true,
             closeOnClickOutside: true,
@@ -431,31 +433,31 @@ class AlertKit {
                     text: 'Accept',
                     onClick: () => callback?.(true),
                     primary: true,
-                    type: AlertType.question,
+                    type: AlertKitType.question,
                 },
                 {
                     text: 'Cancel',
                     onClick: () => callback?.(false),
                     primary: false,
-                    type: AlertType.error,
+                    type: AlertKitType.error,
                 },
             ],
             autoClose: false,
             autoCloseTime: 0,
-        } as Options;
+        } as AlertKitOptions;
 
         this.show({ ...defaults, ...options });
     }
 
-    loading(options: Options, callback?: (value: boolean) => void) {
+    loading(options: AlertKitOptions, callback?: (value: boolean) => void) {
         const defaults = {
-            type: AlertType.loading,
+            type: AlertKitType.loading,
             isMoveable: false,
             showCloseButton: false,
             closeOnEsc: false,
             closeOnClickOutside: false,
             autoClose: false,
-        } as Options;
+        } as AlertKitOptions;
 
         this.show({ ...defaults, ...options });
     }
@@ -520,14 +522,14 @@ class AlertKit {
         });
     }
 
-    createDataDefaults(options: Options): Options {
+    createDataDefaults(options: AlertKitOptions): AlertKitOptions {
         const defaults = {
             headerVisible: true,
             backdropBlur: true,
-            headerTitle: 'Alert',
+            headerTitle: this.name,
             title: 'Subtitle',
             message: 'Message',
-            type: AlertType.info,
+            type: AlertKitType.info,
             showCloseButton: true,
             closeOnEsc: true,
             closeOnClickOutside: true,
@@ -540,7 +542,7 @@ class AlertKit {
             }],
             autoClose: false,
             autoCloseTime: 3000,
-        } as Options;
+        } as AlertKitOptions;
 
         return { ...defaults, ...options };
     }
@@ -760,7 +762,7 @@ class AlertKit {
         if (this.settings!.bodyIconInnerHTML) {
             iconContainer.innerHTML = this.settings!.bodyIconInnerHTML;
         } else {
-            iconContainer.innerHTML = this.icons[this.settings!.type];
+            iconContainer.innerHTML = this.icons[this.settings!.type!];
             const svg = iconContainer.querySelector('svg');
             if (svg) {
                 svg.style.width = '60px';
@@ -901,7 +903,7 @@ class AlertKit {
     trapInSideFocus() {
         if (!this.overlay) return;
 
-        if (this.settings!.type === AlertType.loading) {
+        if (this.settings!.type === AlertKitType.loading) {
             this.firstFocusableElement?.focus();
         } else {
             this.alertBox!.focus();
@@ -951,6 +953,14 @@ class AlertKit {
     set message(value: string) {
         this._message = value;
         this.messageElement!.textContent = value;
+    }
+
+    get name(): string {
+        return this._name;
+    }
+
+    get version(): string {
+        return this._version;
     }
 }
 

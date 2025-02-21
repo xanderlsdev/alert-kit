@@ -1,5 +1,5 @@
 // src/index.js
-import AlertKit, { AlertType } from './js/alertKit.js';
+import AlertKit, { AlertKitType, AlertKitOptions, AlertKitButton } from './js/alertKit.js';
 
 const alertKit = new AlertKit();
 
@@ -7,4 +7,4 @@ const alertKit = new AlertKit();
 //     window.customAlert = customAlert;
 // }
 
-export { AlertKit, alertKit, AlertType };
+export { alertKit, AlertKitType, AlertKitOptions, AlertKitButton};
