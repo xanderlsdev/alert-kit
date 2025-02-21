@@ -1,6 +1,6 @@
 {
   "name": "alert-kit",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A library for displaying alert messages in the browser that adapts to any JavaScript framework",
   "main": "dist/index.js",
   "moduele": "dist/index.js",

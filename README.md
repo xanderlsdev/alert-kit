@@ -40,8 +40,7 @@ alertKit.show({
   headerTitle: "Alert Kit",
   type: "info",
   title: "Information",
-  message:
-    "This is a test information message with a very long text :D",
+  message: "This is a test information message with a very long text :D",
   onOpen: () => {
     console.log("The alert was opened");
   },
@@ -55,8 +54,7 @@ alertKit.show({
   headerTitle: "Alert Kit",
   type: "warning",
   title: "Warning",
-  message:
-    "This is a test warning message with a very long text :D",
+  message: "This is a test warning message with a very long text :D",
   buttons: [
     {
       text: "Ok",
@@ -72,8 +70,7 @@ alertKit.show({
   headerTitle: "Alert Kit",
   type: "error",
   title: "Error",
-  message:
-    "The operation failed with an error message :(",
+  message: "The operation failed with an error message :(",
   buttons: [
     {
       text: "Ok",
@@ -409,25 +406,97 @@ Alert Kit offers multiple styles for your alerts:
 
 ### Information
 
+```bash
+alertKit.information({
+  headerTitle: "Alert Kit",
+  message: "!The operation was information!",
+  onClose: () => {
+    console.log("The alert was closed");
+  },
+}, () => {
+  console.log("Success clicked");
+});
+```
+
 <img src="example/information.webp" alt="Solid Style" width="300" />
 
 ### Success
+
+```bash
+alertKit.success({
+  headerTitle: "Alert Kit",
+  message: "!The operation was successful!",
+  onClose: () => {
+    console.log("The alert was closed");
+  },
+}, () => {
+  console.log("Success clicked");
+});
+```
 
 <img src="example/success.webp" alt="Solid Style" width="300" />
 
 ### Warning
 
+```bash
+alertKit.warning({
+  headerTitle: "Alert Kit",
+  message: "!The operation was warning!",
+  onClose: () => {
+    console.log("The alert was closed");
+  },
+}, () => {
+  console.log("Success clicked");
+});
+``` 
+
 <img src="example/warning.webp" alt="Solid Style" width="300" />
 
 ### Error
+
+```bash
+alertKit.error({
+  headerTitle: "Alert Kit",
+  message: "!The operation was error!",
+  onClose: () => {
+    console.log("The alert was closed");
+  },
+}, () => {
+  console.log("Success clicked");
+});
+```
 
 <img src="example/error.webp" alt="Solid Style" width="300" />
 
 ### Question
 
+```bash
+alertKit.question({
+  headerTitle: "Alert Kit",
+  message: "Are you sure you want to proceed?",
+  onClose: () => {
+    console.log("The alert was closed");
+  },
+}, (value) => {
+  console.log("Value: ", value);
+});
+```
+
 <img src="example/question.webp" alt="Solid Style" width="300" />
 
 ### Loading
+
+```bash
+alertKit.loading({
+  message: "Loading...",
+  onOpen: () => {
+    console.log("Loading started");
+  },
+  onClose: () => {
+    console.log("Finished loading");
+  },
+});
+```
 
 <img src="example/loading.webp" alt="Solid Style" width="300" />
 

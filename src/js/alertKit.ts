@@ -314,6 +314,152 @@ class AlertKit {
         window.addEventListener('focus', this.boundFocusInSideHandler);
     }
 
+    information(options: Options, callback?: () => void) {
+        const defaults = {
+            headerVisible: true,
+            backdropBlur: true,
+            headerTitle: 'Alert',
+            title: 'Information',
+            message: 'Message',
+            type: AlertType.info,
+            showCloseButton: true,
+            closeOnEsc: true,
+            closeOnClickOutside: true,
+            isMoveable: true,
+            buttons: [{
+                text: 'Ok',
+                onClick: () => callback,
+                primary: true,
+                type: AlertType.info,
+            }],
+            autoClose: false,
+            autoCloseTime: 0,
+        } as Options;
+
+        this.show({ ...defaults, ...options });
+    }
+
+    success(options: Options, callback?: () => void) {
+        const defaults = {
+            headerVisible: true,
+            backdropBlur: true,
+            headerTitle: 'Alert',
+            title: 'Success',
+            message: 'Message',
+            type: AlertType.success,
+            showCloseButton: true,
+            closeOnEsc: true,
+            closeOnClickOutside: true,
+            isMoveable: true,
+            buttons: [{
+                text: 'Ok',
+                onClick: () => callback?.(),
+                primary: true,
+                type: AlertType.success,
+            }],
+            autoClose: false,
+            autoCloseTime: 0,
+        } as Options;
+
+        this.show({ ...defaults, ...options });
+    }
+
+    warning(options: Options, callback?: () => void) {
+        const defaults = {
+            headerVisible: true,
+            backdropBlur: true,
+            headerTitle: 'Alert',
+            title: 'Warning',
+            message: 'Message',
+            type: AlertType.warning,
+            showCloseButton: true,
+            closeOnEsc: true,
+            closeOnClickOutside: true,
+            isMoveable: true,
+            buttons: [{
+                text: 'Ok',
+                onClick: () => callback?.(),
+                primary: true,
+                type: AlertType.warning,
+            }],
+            autoClose: false,
+            autoCloseTime: 0,
+        } as Options;
+
+        this.show({ ...defaults, ...options });
+    }
+
+    error(options: Options, callback?: () => void) {
+        const defaults = {
+            headerVisible: true,
+            backdropBlur: true,
+            headerTitle: 'Alert',
+            title: 'Error',
+            message: 'Message',
+            type: AlertType.error,
+            showCloseButton: true,
+            closeOnEsc: true,
+            closeOnClickOutside: true,
+            isMoveable: true,
+            buttons: [{
+                text: 'Ok',
+                onClick: () => callback?.(),
+                primary: true,
+                type: AlertType.error,
+            }],
+            autoClose: false,
+            autoCloseTime: 0,
+        } as Options;
+
+        this.show({ ...defaults, ...options });
+    }
+
+    question(options: Options, callback?: (value: boolean) => void) {
+        const defaults = {
+            headerVisible: true,
+            backdropBlur: true,
+            headerTitle: 'Alert',
+            title: 'Question',
+            message: 'Message',
+            type: AlertType.question,
+            showCloseButton: true,
+            closeOnEsc: true,
+            closeOnClickOutside: true,
+            isMoveable: true,
+            buttons: [
+                {
+                    text: 'Accept',
+                    onClick: () => callback?.(true),
+                    primary: true,
+                    type: AlertType.question,
+                },
+                {
+                    text: 'Cancel',
+                    onClick: () => callback?.(false),
+                    primary: false,
+                    type: AlertType.error,
+                },
+            ],
+            autoClose: false,
+            autoCloseTime: 0,
+        } as Options;
+
+        this.show({ ...defaults, ...options });
+    }
+
+    loading(options: Options, callback?: (value: boolean) => void) {
+        const defaults = {
+            type: AlertType.loading,
+            isMoveable: false,
+            showCloseButton: false,
+            closeOnEsc: false,
+            closeOnClickOutside: false,
+            autoClose: false,
+        } as Options;
+
+        this.show({ ...defaults, ...options });
+    }
+
     close(callback?: () => void) {
         if (!this.overlay && !this.alertBox) return;
 
@@ -349,8 +495,8 @@ class AlertKit {
                 this.previousActiveElement.focus();
             }
 
-            this.settings?.onClose?.();
             callback?.();
+            this.settings?.onClose?.();
         }, { once: true });
     }
 
