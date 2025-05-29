@@ -1,10 +1,10 @@
 // src/index.js
-import AlertKit, { AlertKitType, AlertKitOptions, AlertKitButton } from './js/alertKit.js';
+import { injectAlertKitStyles } from './js/injectStyles.js';
+import { AlertKitType } from './js/constants.js';
+import AlertKit from './js/alertKit.js';
+
+injectAlertKitStyles();
 
 const alertKit = new AlertKit();
 
-// if (typeof window !== 'undefined') {
-//     window.customAlert = customAlert;
-// }
-
-export { alertKit, AlertKitType, AlertKitOptions, AlertKitButton};
+export { alertKit, AlertKitType };
