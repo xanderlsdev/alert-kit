@@ -353,9 +353,9 @@ class AlertKit {
             title: 'Question',
             message: 'Message',
             type: AlertKitType.question,
-            showCloseButton: true,
-            closeOnEsc: true,
-            closeOnClickOutside: true,
+            showCloseButton: false,
+            closeOnEsc: false,
+            closeOnClickOutside: false,
             isMoveable: true,
             buttons: [
                 {
@@ -769,7 +769,7 @@ class AlertKit {
                     }
                 });
             } else if (buttonConfig.className) {
-                button.classList.add(buttonConfig.className);
+                button.className = buttonConfig.className;
             } else {
                 button.className = `alert-kit-button ${buttonConfig.type}`;
             }
