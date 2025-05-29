@@ -1,6 +1,6 @@
 {
   "name": "alert-kit",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "A library for displaying alert messages in the browser that adapts to any JavaScript framework",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -11,9 +11,9 @@
     "url": "https://github.com/xanderlsdev/alert-kit"
   },
   "scripts": {
-    "test": "echo \"Error: no test specifi ed\" && exit 1",
+    "test": "echo \"Error: no test specified\" && exit 1",
     "copy-css": "npx cpx src/css/*.css dist/css",
-    "build": "tsc",
+    "build": "tsc && npm run copy-css",
     "prepare": "npm run build"
   },
   "exports": {
@@ -23,11 +23,11 @@
     }
   },
   "keywords": [
-    "\"alert\"",
-    "\"alert-kit\"",
-    "\"modal\"",
-    "\"javascript\"",
-    "\"typescript\""
+    "alert",
+    "alert-kit",
+    "modal",
+    "javascript",
+    "typescript"
   ],
   "author": "XanderLs <xanderlsdev@gmail.com>",
   "license": "MIT"
