@@ -1,7 +1,7 @@
 // src/js/customAlert.js
 
-import { AlertKitType } from "..";
 import type { AlertKitOptions } from "../types";
+import { AlertKitType } from "./constants";
 
 
 interface Icons {
@@ -768,6 +768,8 @@ class AlertKit {
                         button.classList.add(className.trim());
                     }
                 });
+            } else if (buttonConfig.className) {
+                button.classList.add(buttonConfig.className);
             } else {
                 button.className = `alert-kit-button ${buttonConfig.type}`;
             }

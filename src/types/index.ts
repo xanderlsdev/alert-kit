@@ -7,6 +7,7 @@ export type AlertKitButton = {
     primary?: boolean;
     type?: 'error' | 'warning' | 'info' | 'question' | 'success';
     class?: string[];
+    className?: string;
     style?: string;
 };
 
