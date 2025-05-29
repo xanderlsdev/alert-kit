@@ -188,8 +188,14 @@ export function injectAlertKitStyles() {
                 /* border: 1px solid #4CAF50; */
                 color: #4CAF50;
             }
+            
+            .alert-kit-body .alert-kit-body-content {
+                display: flex;
+                flex-direction: column;
+                gap: 0.25rem;
+            }
 
-            .alert-kit-body h2 {
+            .alert-kit-body .alert-kit-body-content h2 {
                 color: inherit;
                 margin: 0;
                 font-size: 1.25rem;
@@ -197,7 +203,7 @@ export function injectAlertKitStyles() {
                 font-weight: 600;
             }
 
-            .alert-kit-body p {
+            .alert-kit-body .alert-kit-body-content p {
                 color: inherit;
                 margin: 0;
                 font-size: 1rem;

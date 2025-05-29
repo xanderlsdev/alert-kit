@@ -172,6 +172,7 @@ class AlertKit {
                 body.appendChild(this.createIconElement());
                 // Agregar el contenido de los titulos al cuerpo del modal
                 const bodyContent = document.createElement('div');
+                bodyContent.className = 'alert-kit-body-content';
                 bodyContent.appendChild(this.createTitleElement());
                 bodyContent.appendChild(this.createMessageElement());
                 body.appendChild(bodyContent);
