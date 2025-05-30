@@ -18,7 +18,7 @@ class AlertKit {
     static instance: AlertKit;
 
     private _name: string = 'Alert Kit';
-    private _version: string = '2.1.4';
+    private _version: string = '2.1.5';
     private icons: Icons;
     private focusableElements: HTMLElement[] = [];
     private firstFocusableElement: HTMLElement | null = null;
@@ -220,18 +220,31 @@ class AlertKit {
         document.addEventListener('keydown', this.boundFocusHandler);
 
         // Si no es un modal de tipo loading, se enfoca el primer botón si existe o el primer elemento focalizable
-        if (this.settings.type === AlertKitType.loading) {
-            this.firstFocusableElement.focus();
-        } else {
-            if (this.settings.buttons && this.settings.buttons.length > 0) {
-                const focusButton = Array.from(this.alertBox.querySelectorAll("button")).find(element => element.getAttribute('data-primary'));
-                if (focusButton) {
-                    focusButton.focus();
-                }
+        // if (this.settings.type === AlertKitType.loading) {
+        //     this.firstFocusableElement.focus();
+        // } else {
+        //     if (this.settings.buttons && this.settings.buttons.length > 0) {
+        //         const focusButton = Array.from(this.alertBox.querySelectorAll("button")).find(element => element.getAttribute('data-primary'));
+        //         if (focusButton) {
+        //             focusButton.focus();
+        //         }
+        //     } else {
+        //         this.firstFocusableElement.focus();
+        //     }
+        // }
+
+        requestAnimationFrame(() => {
+            if (this.settings!.type === AlertKitType.loading) {
+                this.firstFocusableElement?.focus();
             } else {
-                this.firstFocusableElement.focus();
+                const primaryButton = this.alertBox?.querySelector('button[data-primary="true"]') as HTMLButtonElement;
+                if (primaryButton) {
+                    primaryButton.focus();
+                } else if (this.firstFocusableElement) {
+                    this.firstFocusableElement.focus();
+                }
             }
-        }
+        });
 
         // Auto-cerrado si está configurado
         if (this.settings.autoClose) {
@@ -622,22 +635,22 @@ class AlertKit {
         return content;
     }
 
-   // Obtener elemento activo de manera más segura
-   private getActiveElementSafely(): HTMLElement | null {
-    try {
-        let activeElement = document.activeElement as HTMLElement;
-        
-        // Si el elemento activo está dentro de un shadow DOM
-        while (activeElement && activeElement.shadowRoot && activeElement.shadowRoot.activeElement) {
-            activeElement = activeElement.shadowRoot.activeElement as HTMLElement;
+    // Obtener elemento activo de manera más segura
+    private getActiveElementSafely(): HTMLElement | null {
+        try {
+            let activeElement = document.activeElement as HTMLElement;
+
+            // Si el elemento activo está dentro de un shadow DOM
+            while (activeElement && activeElement.shadowRoot && activeElement.shadowRoot.activeElement) {
+                activeElement = activeElement.shadowRoot.activeElement as HTMLElement;
+            }
+
+            // Si no hay elemento activo válido, usar body como fallback
+            return activeElement && activeElement !== document.body ? activeElement : null;
+        } catch (error) {
+            return null;
         }
-        
-        // Si no hay elemento activo válido, usar body como fallback
-        return activeElement && activeElement !== document.body ? activeElement : null;
-    } catch (error) {
-        return null;
     }
-}
 
     createHeader(): HTMLDivElement {
         const elementHeader = document.createElement('div');
@@ -868,6 +881,8 @@ class AlertKit {
 
             if (buttonConfig.primary) {
                 button.setAttribute('data-primary', 'true');
+            } else {
+                button.removeAttribute('data-primary');
             }
 
             // Agrega el evento de clic, cerrando el overlay cuando se presiona el botón
@@ -922,19 +937,32 @@ class AlertKit {
     trapInSideFocus() {
         if (!this.overlay) return;
 
-        if (this.settings!.type === AlertKitType.loading) {
-            this.firstFocusableElement?.focus();
-        } else {
-            this.alertBox!.focus();
-            if (this.settings!.buttons && this.settings!.buttons.length > 0) {
-                const focusButton = Array.from(this.alertBox!.querySelectorAll("button")).find(element => element.getAttribute('data-primary'));
-                if (focusButton) {
-                    focusButton.focus();
-                }
-            } else {
+        requestAnimationFrame(() => {
+            if (this.settings!.type === AlertKitType.loading) {
                 this.firstFocusableElement?.focus();
+            } else {
+                const primaryButton = this.alertBox?.querySelector('button[data-primary="true"]') as HTMLButtonElement;
+                if (primaryButton) {
+                    primaryButton.focus();
+                } else if (this.firstFocusableElement) {
+                    this.firstFocusableElement.focus();
+                }
             }
-        }
+        });
+
+        // if (this.settings!.type === AlertKitType.loading) {
+        //     this.firstFocusableElement?.focus();
+        // } else {
+        //     this.alertBox!.focus();
+        //     if (this.settings!.buttons && this.settings!.buttons.length > 0) {
+        //         const focusButton = Array.from(this.alertBox!.querySelectorAll("button")).find(element => element.getAttribute('data-primary'));
+        //         if (focusButton) {
+        //             focusButton.focus();
+        //         }
+        //     } else {
+        //         this.firstFocusableElement?.focus();
+        //     }
+        // }
     }
 
     outSideClick(e: MouseEvent) {
