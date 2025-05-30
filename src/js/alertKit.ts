@@ -246,7 +246,34 @@ class AlertKit {
         window.addEventListener('focus', this.boundFocusInSideHandler);
     }
 
-    information(options: AlertKitOptions, callback?: () => void) {
+    mergeDefaultButton(defaultButton: any, customButton?: Partial<any>) {
+        if (!customButton) return defaultButton;
+
+        return {
+            ...defaultButton,
+            text: customButton.text || defaultButton.text,
+            html: customButton.html || defaultButton.html,
+            class: customButton.class || defaultButton.class,
+            style: customButton.style || defaultButton.style,
+            onClick: customButton.onClick || defaultButton.onClick
+        };
+    }
+
+    information(options: AlertKitOptions & {
+        primaryButton?: {
+            text?: string,
+            class?: string[],
+            style?: string,
+            html?: string
+        }
+    }, callback?: () => void) {
+        const defaultButton = {
+            text: 'Ok',
+            onClick: () => callback?.(),
+            primary: true,
+            type: AlertKitType.info,
+        };
+
         const defaults = {
             headerVisible: true,
             backdropBlur: true,
@@ -258,12 +285,7 @@ class AlertKit {
             closeOnEsc: true,
             closeOnClickOutside: true,
             isMoveable: true,
-            buttons: [{
-                text: 'Ok',
-                onClick: () => callback,
-                primary: true,
-                type: AlertKitType.info,
-            }],
+            buttons: [this.mergeDefaultButton(defaultButton, options.primaryButton)],
             autoClose: false,
             autoCloseTime: 0,
         } as AlertKitOptions;
@@ -271,7 +293,21 @@ class AlertKit {
         this.show({ ...defaults, ...options });
     }
 
-    success(options: AlertKitOptions, callback?: () => void) {
+    success(options: AlertKitOptions & {
+        primaryButton?: {
+            text?: string,
+            class?: string[],
+            style?: string,
+            html?: string
+        }
+    }, callback?: () => void) {
+        const defaultButton = {
+            text: 'Ok',
+            onClick: () => callback?.(),
+            primary: true,
+            type: AlertKitType.success,
+        };
+
         const defaults = {
             headerVisible: true,
             backdropBlur: true,
@@ -283,12 +319,7 @@ class AlertKit {
             closeOnEsc: true,
             closeOnClickOutside: true,
             isMoveable: true,
-            buttons: [{
-                text: 'Ok',
-                onClick: () => callback?.(),
-                primary: true,
-                type: AlertKitType.success,
-            }],
+            buttons: [this.mergeDefaultButton(defaultButton, options.primaryButton)],
             autoClose: false,
             autoCloseTime: 0,
         } as AlertKitOptions;
@@ -296,7 +327,21 @@ class AlertKit {
         this.show({ ...defaults, ...options });
     }
 
-    warning(options: AlertKitOptions, callback?: () => void) {
+    warning(options: AlertKitOptions & {
+        primaryButton?: {
+            text?: string,
+            class?: string[],
+            style?: string,
+            html?: string
+        }
+    }, callback?: () => void) {
+        const defaultButton = {
+            text: 'Ok',
+            onClick: () => callback?.(),
+            primary: true,
+            type: AlertKitType.warning,
+        };
+
         const defaults = {
             headerVisible: true,
             backdropBlur: true,
@@ -308,12 +353,7 @@ class AlertKit {
             closeOnEsc: true,
             closeOnClickOutside: true,
             isMoveable: true,
-            buttons: [{
-                text: 'Ok',
-                onClick: () => callback?.(),
-                primary: true,
-                type: AlertKitType.warning,
-            }],
+            buttons: [this.mergeDefaultButton(defaultButton, options.primaryButton)],
             autoClose: false,
             autoCloseTime: 0,
         } as AlertKitOptions;
@@ -321,7 +361,22 @@ class AlertKit {
         this.show({ ...defaults, ...options });
     }
 
-    error(options: AlertKitOptions, callback?: () => void) {
+    error(options: AlertKitOptions & {
+        primaryButton?: {
+            text?: string,
+            class?: string[],
+            style?: string,
+            html?: string
+        }
+    }, callback?: () => void) {
+        const defaultButton = {
+            text: 'Ok',
+            onClick: () => callback?.(),
+            primary: true,
+            type: AlertKitType.error,
+        };
+
+
         const defaults = {
             headerVisible: true,
             backdropBlur: true,
@@ -333,12 +388,7 @@ class AlertKit {
             closeOnEsc: true,
             closeOnClickOutside: true,
             isMoveable: true,
-            buttons: [{
-                text: 'Ok',
-                onClick: () => callback?.(),
-                primary: true,
-                type: AlertKitType.error,
-            }],
+            buttons: [this.mergeDefaultButton(defaultButton, options.primaryButton)],
             autoClose: false,
             autoCloseTime: 0,
         } as AlertKitOptions;
@@ -346,7 +396,34 @@ class AlertKit {
         this.show({ ...defaults, ...options });
     }
 
-    question(options: AlertKitOptions, callback?: (value: boolean) => void) {
+    question(options: AlertKitOptions & {
+        acceptButton?: {
+            text?: string,
+            class?: string[],
+            style?: string,
+            html?: string
+        },
+        cancelButton?: {
+            text?: string,
+            class?: string[],
+            style?: string,
+            html?: string
+        }
+    }, callback?: (value: boolean) => void) {
+        const defaultAcceptButton = {
+            text: 'Accept',
+            onClick: () => callback?.(true),
+            primary: true,
+            type: AlertKitType.question,
+        };
+
+        const defaultCancelButton = {
+            text: 'Cancel',
+            onClick: () => callback?.(false),
+            primary: false,
+            type: AlertKitType.error,
+        };
+
         const defaults = {
             headerVisible: true,
             backdropBlur: true,
@@ -359,18 +436,8 @@ class AlertKit {
             closeOnClickOutside: false,
             isMoveable: true,
             buttons: [
-                {
-                    text: 'Accept',
-                    onClick: () => callback?.(true),
-                    primary: true,
-                    type: AlertKitType.question,
-                },
-                {
-                    text: 'Cancel',
-                    onClick: () => callback?.(false),
-                    primary: false,
-                    type: AlertKitType.error,
-                },
+                this.mergeDefaultButton(defaultAcceptButton, options.acceptButton),
+                this.mergeDefaultButton(defaultCancelButton, options.cancelButton)
             ],
             autoClose: false,
             autoCloseTime: 0,
@@ -379,7 +446,7 @@ class AlertKit {
         this.show({ ...defaults, ...options });
     }
 
-    loading(options: AlertKitOptions, callback?: (value: boolean) => void) {
+    loading(options: AlertKitOptions) {
         const defaults = {
             type: AlertKitType.loading,
             isMoveable: false,
