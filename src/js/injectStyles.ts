@@ -23,7 +23,7 @@ export function injectAlertKitStyles() {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                z-index: 1000;
+                z-index: 9999;
                 font-family: inherit;
                 font-size: 1rem;
                 color: inherit;
