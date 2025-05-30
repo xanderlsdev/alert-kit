@@ -254,6 +254,7 @@ class AlertKit {
             text: customButton.text || defaultButton.text,
             html: customButton.html || defaultButton.html,
             class: customButton.class || defaultButton.class,
+            className: customButton.className || defaultButton.className,
             style: customButton.style || defaultButton.style,
             onClick: customButton.onClick || defaultButton.onClick
         };
@@ -263,6 +264,7 @@ class AlertKit {
         primaryButton?: {
             text?: string,
             class?: string[],
+            className?: string,
             style?: string,
             html?: string
         }
@@ -297,6 +299,7 @@ class AlertKit {
         primaryButton?: {
             text?: string,
             class?: string[],
+            className?: string,
             style?: string,
             html?: string
         }
@@ -331,6 +334,7 @@ class AlertKit {
         primaryButton?: {
             text?: string,
             class?: string[],
+            className?: string,
             style?: string,
             html?: string
         }
@@ -365,6 +369,7 @@ class AlertKit {
         primaryButton?: {
             text?: string,
             class?: string[],
+            className?: string,
             style?: string,
             html?: string
         }
@@ -400,12 +405,14 @@ class AlertKit {
         acceptButton?: {
             text?: string,
             class?: string[],
+            className?: string,
             style?: string,
             html?: string
         },
         cancelButton?: {
             text?: string,
             class?: string[],
+            className?: string,
             style?: string,
             html?: string
         }
