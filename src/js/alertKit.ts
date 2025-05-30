@@ -18,7 +18,7 @@ class AlertKit {
     static instance: AlertKit;
 
     private _name: string = 'Alert Kit';
-    private _version: string = '2.1.3';
+    private _version: string = '2.1.4';
     private icons: Icons;
     private focusableElements: HTMLElement[] = [];
     private firstFocusableElement: HTMLElement | null = null;
