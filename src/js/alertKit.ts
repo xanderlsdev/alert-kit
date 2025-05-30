@@ -18,7 +18,7 @@ class AlertKit {
     static instance: AlertKit;
 
     private _name: string = 'Alert Kit';
-    private _version: string = '2.1.2';
+    private _version: string = '2.1.3';
     private icons: Icons;
     private focusableElements: HTMLElement[] = [];
     private firstFocusableElement: HTMLElement | null = null;
@@ -42,9 +42,6 @@ class AlertKit {
     private isDraggingHeader: boolean = false;
     private offsetX: number = 0;
     private offsetY: number = 0;
-
-    private focusTrapActive: boolean = false;
-    private originalBodyFocusHandler: ((e: FocusEvent) => void) | null = null;
 
     // Método para crear las opciones por defecto
     constructor() {
@@ -123,10 +120,7 @@ class AlertKit {
         this.settings = this.createDataDefaults(options);
 
         // Obtener el elemento activo del documento
-        this.previousActiveElement = this.getActiveElement() as HTMLElement;
-
-        // Deshabilitar manejo de foco de otros modales temporalmente
-        this.disableExternalFocusTraps();
+        this.previousActiveElement = this.getActiveElementSafely();
 
         // Crear el elemento contenedor del modal
         this.overlay = this.createContainer();
@@ -252,29 +246,7 @@ class AlertKit {
         window.addEventListener('focus', this.boundFocusInSideHandler);
     }
 
-    private disableExternalFocusTraps(): void {
-        // Buscar otros modales o elementos con aria-modal="true"
-        const existingModals = document.querySelectorAll('[aria-modal="true"]');
-        existingModals.forEach(modal => {
-            if (modal !== this.alertBox) {
-                // Temporalmente deshabilitar el foco en otros modales
-                (modal as HTMLElement).style.pointerEvents = 'none';
-                modal.setAttribute('data-alert-kit-disabled', 'true');
-            }
-        });
-
-        // Capturar y deshabilitar eventos de foco existentes temporalmente
-        this.originalBodyFocusHandler = this.captureExistingFocusHandlers();
-    }
-
-    private captureExistingFocusHandlers(): ((e: FocusEvent) => void) | null {
-        // Esta es una implementación simplificada
-        // En un caso real, podrías necesitar una lógica más compleja
-        return null;
-    }
-
-
-    private mergeDefaultButton(defaultButton: any, customButton?: Partial<any>) {
+    mergeDefaultButton(defaultButton: any, customButton?: Partial<any>) {
         if (!customButton) return defaultButton;
 
         return {
@@ -650,21 +622,22 @@ class AlertKit {
         return content;
     }
 
-    getActiveElement(): Element | null {
-        try {
-            let activeElement = document.activeElement as HTMLElement;
-            
-            // Si el elemento activo está dentro de un shadow DOM
-            while (activeElement && activeElement.shadowRoot && activeElement.shadowRoot.activeElement) {
-                activeElement = activeElement.shadowRoot.activeElement as HTMLElement;
-            }
-            
-            // Si no hay elemento activo válido, usar body como fallback
-            return activeElement && activeElement !== document.body ? activeElement : null;
-        } catch (error) {
-            return null;
+   // Obtener elemento activo de manera más segura
+   private getActiveElementSafely(): HTMLElement | null {
+    try {
+        let activeElement = document.activeElement as HTMLElement;
+        
+        // Si el elemento activo está dentro de un shadow DOM
+        while (activeElement && activeElement.shadowRoot && activeElement.shadowRoot.activeElement) {
+            activeElement = activeElement.shadowRoot.activeElement as HTMLElement;
         }
+        
+        // Si no hay elemento activo válido, usar body como fallback
+        return activeElement && activeElement !== document.body ? activeElement : null;
+    } catch (error) {
+        return null;
     }
+}
 
     createHeader(): HTMLDivElement {
         const elementHeader = document.createElement('div');
@@ -928,12 +901,12 @@ class AlertKit {
         if (!isTabPressed) return;
 
         if (e.shiftKey) {
-            if (this.getActiveElement() === this.firstFocusableElement) {
+            if (this.getActiveElementSafely() === this.firstFocusableElement) {
                 this.lastFocusableElement?.focus();
                 e.preventDefault();
             }
         } else {
-            if (this.getActiveElement() === this.lastFocusableElement) {
+            if (this.getActiveElementSafely() === this.lastFocusableElement) {
                 this.firstFocusableElement?.focus();
                 e.preventDefault();
             }
