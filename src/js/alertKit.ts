@@ -18,7 +18,7 @@ class AlertKit {
     static instance: AlertKit;
 
     private _name: string = 'Alert Kit';
-    private _version: string = '2.1.5';
+    private _version: string = '2.1.6';
     private icons: Icons;
     private focusableElements: HTMLElement[] = [];
     private firstFocusableElement: HTMLElement | null = null;
@@ -654,7 +654,6 @@ class AlertKit {
 
     createHeader(): HTMLDivElement {
         const elementHeader = document.createElement('div');
-        elementHeader.className = 'alert-kit-header';
 
         if (this.settings!.isMoveable) {
             elementHeader.classList.add('alert-kit-cursor-move');
@@ -666,10 +665,12 @@ class AlertKit {
                     elementHeader.classList.add(className.trim());
                 }
             });
-        }
-
-        if (this.settings!.headerStyle) {
+        } else if (this.settings!.headerClassName) {
+            elementHeader.className = this.settings!.headerClassName;
+        } else if (this.settings!.headerStyle) {
             elementHeader.setAttribute('style', this.settings!.headerStyle);
+        } else {
+            elementHeader.className = 'alert-kit-header';
         }
 
         return elementHeader;
@@ -684,9 +685,7 @@ class AlertKit {
                     title.classList.add(className.trim());
                 }
             });
-        }
-
-        if (this.settings!.headerTitleStyle) {
+        } else if (this.settings!.headerTitleStyle) {
             title.setAttribute('style', this.settings!.headerTitleStyle);
         }
 
@@ -871,12 +870,10 @@ class AlertKit {
                 });
             } else if (buttonConfig.className) {
                 button.className = buttonConfig.className;
+            } else if (buttonConfig.style) {
+                button.setAttribute('style', buttonConfig.style);
             } else {
                 button.className = `alert-kit-button ${buttonConfig.type}`;
-            }
-
-            if (buttonConfig.style) {
-                button.setAttribute('style', buttonConfig.style);
             }
 
             if (buttonConfig.primary) {

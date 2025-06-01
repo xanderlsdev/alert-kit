@@ -22,6 +22,7 @@ export type AlertKitOptions = {
     headerVisible?: boolean;
     headerClass?: string[];
     headerStyle?: string;
+    headerClassName?: string;
 
     headerTitleClass?: string[];
     headerTitleStyle?: string;
