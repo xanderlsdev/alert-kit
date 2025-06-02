@@ -2,7 +2,7 @@
 
 import type { AlertKitOptions } from "../types";
 import { AlertKitType } from "./constants";
-
+import AlertKitConfig, { AlertKitGlobalConfig } from "./globalConfig";
 
 interface Icons {
     error: string;
@@ -16,9 +16,10 @@ interface Icons {
 class AlertKit {
 
     static instance: AlertKit;
+    private config: AlertKitConfig;
 
     private _name: string = 'Alert Kit';
-    private _version: string = '2.1.6';
+    private _version: string = '2.1.7';
     private icons: Icons;
     private focusableElements: HTMLElement[] = [];
     private firstFocusableElement: HTMLElement | null = null;
@@ -46,6 +47,7 @@ class AlertKit {
     // Método para crear las opciones por defecto
     constructor() {
         this.icons = this.generateIcons();
+        this.config = AlertKitConfig.getInstance();
 
         // Si la instancia ya existe, evitar la creación de una nueva
         if (AlertKit.instance) {
@@ -282,8 +284,10 @@ class AlertKit {
             html?: string
         }
     }, callback?: () => void) {
+        const globalConfig = this.config.getDefaults();
+
         const defaultButton = {
-            text: 'Ok',
+            text: globalConfig.defaultTexts?.ok || 'Ok',
             onClick: () => callback?.(),
             primary: true,
             type: AlertKitType.info,
@@ -291,16 +295,17 @@ class AlertKit {
 
         const defaults = {
             headerVisible: true,
-            backdropBlur: true,
-            headerTitle: this.name,
-            title: 'Information',
+            backdropBlur: globalConfig.backdropBlur ?? true,
+            headerClassName: globalConfig.headerClassName,
+            headerTitle: globalConfig.headerTitle || this.name,
+            title: globalConfig.defaultTexts?.info || 'Information',
             message: 'Message',
             type: AlertKitType.info,
-            showCloseButton: true,
-            closeOnEsc: true,
-            closeOnClickOutside: true,
-            isMoveable: true,
-            buttons: [this.mergeDefaultButton(defaultButton, options.primaryButton)],
+            showCloseButton: globalConfig.showCloseButton ?? true,
+            closeOnEsc: globalConfig.closeOnEsc ?? true,
+            closeOnClickOutside: globalConfig.closeOnClickOutside ?? true,
+            isMoveable: globalConfig.isMoveable ?? true,
+            buttons: [this.createButtonWithDefaults(defaultButton, options.primaryButton, 'primary')],
             autoClose: false,
             autoCloseTime: 0,
         } as AlertKitOptions;
@@ -317,8 +322,10 @@ class AlertKit {
             html?: string
         }
     }, callback?: () => void) {
+        const globalConfig = this.config.getDefaults();
+
         const defaultButton = {
-            text: 'Ok',
+            text: globalConfig.defaultTexts?.ok || 'Ok',
             onClick: () => callback?.(),
             primary: true,
             type: AlertKitType.success,
@@ -326,16 +333,17 @@ class AlertKit {
 
         const defaults = {
             headerVisible: true,
-            backdropBlur: true,
-            headerTitle: this.name,
-            title: 'Success',
+            backdropBlur: globalConfig.backdropBlur ?? true,
+            headerClassName: globalConfig.headerClassName,
+            headerTitle: globalConfig.headerTitle || this.name,
+            title: globalConfig.defaultTexts?.success || 'Success',
             message: 'Message',
             type: AlertKitType.success,
-            showCloseButton: true,
-            closeOnEsc: true,
-            closeOnClickOutside: true,
-            isMoveable: true,
-            buttons: [this.mergeDefaultButton(defaultButton, options.primaryButton)],
+            showCloseButton: globalConfig.showCloseButton ?? true,
+            closeOnEsc: globalConfig.closeOnEsc ?? true,
+            closeOnClickOutside: globalConfig.closeOnClickOutside ?? true,
+            isMoveable: globalConfig.isMoveable ?? true,
+            buttons: [this.createButtonWithDefaults(defaultButton, options.primaryButton, 'primary')],
             autoClose: false,
             autoCloseTime: 0,
         } as AlertKitOptions;
@@ -352,8 +360,10 @@ class AlertKit {
             html?: string
         }
     }, callback?: () => void) {
+        const globalConfig = this.config.getDefaults();
+
         const defaultButton = {
-            text: 'Ok',
+            text: globalConfig.defaultTexts?.ok || 'Ok',
             onClick: () => callback?.(),
             primary: true,
             type: AlertKitType.warning,
@@ -361,16 +371,17 @@ class AlertKit {
 
         const defaults = {
             headerVisible: true,
-            backdropBlur: true,
-            headerTitle: this.name,
-            title: 'Warning',
+            backdropBlur: globalConfig.backdropBlur ?? true,
+            headerClassName: globalConfig.headerClassName,
+            headerTitle: globalConfig.headerTitle || this.name,
+            title: globalConfig.defaultTexts?.warning || 'Warning',
             message: 'Message',
             type: AlertKitType.warning,
-            showCloseButton: true,
-            closeOnEsc: true,
-            closeOnClickOutside: true,
-            isMoveable: true,
-            buttons: [this.mergeDefaultButton(defaultButton, options.primaryButton)],
+            showCloseButton: globalConfig.showCloseButton ?? true,
+            closeOnEsc: globalConfig.closeOnEsc ?? true,
+            closeOnClickOutside: globalConfig.closeOnClickOutside ?? true,
+            isMoveable: globalConfig.isMoveable ?? true,
+            buttons: [this.createButtonWithDefaults(defaultButton, options.primaryButton, 'primary')],
             autoClose: false,
             autoCloseTime: 0,
         } as AlertKitOptions;
@@ -387,26 +398,28 @@ class AlertKit {
             html?: string
         }
     }, callback?: () => void) {
+        const globalConfig = this.config.getDefaults();
+
         const defaultButton = {
-            text: 'Ok',
+            text: globalConfig.defaultTexts?.ok || 'Ok',
             onClick: () => callback?.(),
             primary: true,
             type: AlertKitType.error,
         };
 
-
         const defaults = {
             headerVisible: true,
-            backdropBlur: true,
-            headerTitle: this.name,
-            title: 'Error',
+            backdropBlur: globalConfig.backdropBlur ?? true,
+            headerClassName: globalConfig.headerClassName,
+            headerTitle: globalConfig.headerTitle || this.name,
+            title: globalConfig.defaultTexts?.error || 'Error',
             message: 'Message',
             type: AlertKitType.error,
-            showCloseButton: true,
-            closeOnEsc: true,
-            closeOnClickOutside: true,
-            isMoveable: true,
-            buttons: [this.mergeDefaultButton(defaultButton, options.primaryButton)],
+            showCloseButton: globalConfig.showCloseButton ?? true,
+            closeOnEsc: globalConfig.closeOnEsc ?? true,
+            closeOnClickOutside: globalConfig.closeOnClickOutside ?? true,
+            isMoveable: globalConfig.isMoveable ?? true,
+            buttons: [this.createButtonWithDefaults(defaultButton, options.primaryButton, 'primary')],
             autoClose: false,
             autoCloseTime: 0,
         } as AlertKitOptions;
@@ -430,15 +443,17 @@ class AlertKit {
             html?: string
         }
     }, callback?: (value: boolean) => void) {
+        const globalConfig = this.config.getDefaults();
+
         const defaultAcceptButton = {
-            text: 'Accept',
+            text: globalConfig.defaultTexts?.accept || 'Accept',
             onClick: () => callback?.(true),
             primary: true,
             type: AlertKitType.question,
         };
 
         const defaultCancelButton = {
-            text: 'Cancel',
+            text: globalConfig.defaultTexts?.cancel || 'Cancel',
             onClick: () => callback?.(false),
             primary: false,
             type: AlertKitType.error,
@@ -446,18 +461,19 @@ class AlertKit {
 
         const defaults = {
             headerVisible: true,
-            backdropBlur: true,
-            headerTitle: this.name,
-            title: 'Question',
+            backdropBlur: globalConfig.backdropBlur ?? true,
+            headerClassName: globalConfig.headerClassName,
+            headerTitle: globalConfig.headerTitle || this.name,
+            title: globalConfig.defaultTexts?.question || 'Question',
             message: 'Message',
             type: AlertKitType.question,
             showCloseButton: false,
             closeOnEsc: false,
             closeOnClickOutside: false,
-            isMoveable: true,
+            isMoveable: globalConfig.isMoveable ?? true,
             buttons: [
-                this.mergeDefaultButton(defaultAcceptButton, options.acceptButton),
-                this.mergeDefaultButton(defaultCancelButton, options.cancelButton)
+                this.createButtonWithDefaults(defaultAcceptButton, options.acceptButton, 'accept'),
+                this.createButtonWithDefaults(defaultCancelButton, options.cancelButton, 'cancel')
             ],
             autoClose: false,
             autoCloseTime: 0,
@@ -519,6 +535,18 @@ class AlertKit {
         }, { once: true });
     }
 
+
+    static setGlobalDefaults(config: AlertKitGlobalConfig) {
+        const configInstance = AlertKitConfig.getInstance();
+        configInstance.setDefaults(config);
+    }
+
+
+    static getGlobalDefaults(): AlertKitGlobalConfig {
+        const configInstance = AlertKitConfig.getInstance();
+        return configInstance.getDefaults();
+    }
+
     getFocusableElements(container: HTMLElement): Element[] {
         return Array.from(container.querySelectorAll(
             'button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
@@ -540,7 +568,9 @@ class AlertKit {
     }
 
     createDataDefaults(options: AlertKitOptions): AlertKitOptions {
-        const defaults = {
+        const globalDefaults = this.config.mergeWithDefaults(options);
+
+        const systemDefaults = {
             headerVisible: true,
             backdropBlur: true,
             headerTitle: this.name,
@@ -561,12 +591,49 @@ class AlertKit {
             autoCloseTime: 3000,
         } as AlertKitOptions;
 
-        return { ...defaults, ...options };
+        return { ...systemDefaults, ...globalDefaults };
+    }
+
+    private createButtonWithDefaults(
+        defaultButton: any,
+        customButton?: any,
+        buttonType: 'primary' | 'cancel' | 'accept' = 'primary'
+    ) {
+        const globalConfig = this.config.getDefaults();
+        let defaultClassName = '';
+
+        switch (buttonType) {
+            case 'primary':
+                defaultClassName = globalConfig.primaryButtonClassName || '';
+                break;
+            case 'cancel':
+                defaultClassName = globalConfig.cancelButtonClassName || '';
+                break;
+            case 'accept':
+                defaultClassName = globalConfig.acceptButtonClassName || '';
+                break;
+        }
+
+        if (!customButton) {
+            return {
+                ...defaultButton,
+                className: defaultClassName || defaultButton.className
+            };
+        }
+
+        return {
+            ...defaultButton,
+            text: customButton.text || defaultButton.text,
+            html: customButton.html || defaultButton.html,
+            class: customButton.class || defaultButton.class,
+            className: customButton.className || defaultClassName || defaultButton.className,
+            style: customButton.style || defaultButton.style,
+            onClick: customButton.onClick || defaultButton.onClick
+        };
     }
 
     createContainer() {
         const container = document.createElement('div');
-        container.className = 'alert-kit-overlay';
 
         if (this.settings!.overlayClass) {
             this.settings!.overlayClass.forEach((className) => {
@@ -574,10 +641,13 @@ class AlertKit {
                     container.classList.add(className.trim());
                 }
             });
-        }
-
-        if (this.settings!.overlayStyle) {
+        } else if (this.settings!.overlayClassName) {
+            container.className = this.settings!.overlayClassName;
+        } else if (this.settings!.overlayStyle) {
             container.setAttribute('style', this.settings!.overlayStyle);
+        } else {
+            container.className = 'alert-kit-overlay';
+
         }
 
         if (this.settings!.backdropBlur) {
@@ -589,7 +659,6 @@ class AlertKit {
 
     createContentBox() {
         const content = document.createElement('div');
-        content.className = 'alert-kit-content';
 
         if (this.settings!.contentClass) {
             this.settings!.contentClass.forEach((className) => {
@@ -597,10 +666,12 @@ class AlertKit {
                     content.classList.add(className.trim());
                 }
             });
-        }
-
-        if (this.settings!.contentStyle) {
+        } else if (this.settings!.contentClassName) {
+            content.className = this.settings!.contentClassName;
+        } else if (this.settings!.contentStyle) {
             content.setAttribute('style', this.settings!.contentStyle);
+        } else {
+            content.className = 'alert-kit-content';
         }
 
         content.setAttribute('tabindex', '-1');
@@ -685,8 +756,12 @@ class AlertKit {
                     title.classList.add(className.trim());
                 }
             });
+        } else if (this.settings!.headerTitleClassName) {
+            title.className = this.settings!.headerTitleClassName;
         } else if (this.settings!.headerTitleStyle) {
             title.setAttribute('style', this.settings!.headerTitleStyle);
+        } else {
+            title.className = 'alert-kit-header-p';
         }
 
         if (this.settings!.headerTitleInnerHTML) {
@@ -700,18 +775,17 @@ class AlertKit {
 
     createCloseButtonHeader(): HTMLButtonElement {
         const closeButton = document.createElement('button');
-        closeButton.className = 'alert-kit-close';
 
-        if (this.settings!.headerTitleClass) {
-            this.settings!.headerTitleClass.forEach((className) => {
+        if (this.settings!.headerCloseButtonClass) {
+            this.settings!.headerCloseButtonClass.forEach((className) => {
                 if (className.trim().length !== 0) {
                     closeButton.classList.add(className.trim());
                 }
             });
-        }
-
-        if (this.settings!.headerTitleStyle) {
-            closeButton.setAttribute('style', this.settings!.headerTitleStyle);
+        } else if (this.settings!.headerCloseButtonStyle) {
+            closeButton.setAttribute('style', this.settings!.headerCloseButtonStyle);
+        } else {
+            closeButton.className = 'alert-kit-close';
         }
 
         closeButton.setAttribute('aria-label', 'Close alert');
@@ -728,7 +802,6 @@ class AlertKit {
 
     createBody(): HTMLDivElement {
         const body = document.createElement('div');
-        body.className = 'alert-kit-body';
 
         if (this.settings!.bodyClass) {
             this.settings!.bodyClass.forEach((className) => {
@@ -736,10 +809,12 @@ class AlertKit {
                     body.classList.add(className.trim());
                 }
             });
-        }
-
-        if (this.settings!.bodyStyle) {
+        } else if (this.settings!.bodyClassName) {
+            body.className = this.settings!.bodyClassName;
+        } else if (this.settings!.bodyStyle) {
             body.setAttribute('style', this.settings!.bodyStyle);
+        } else {
+            body.className = 'alert-kit-body';
         }
 
         if (this.settings!.bodyInnerHTML) {
@@ -751,7 +826,6 @@ class AlertKit {
 
     creteFooter(): HTMLDivElement {
         const footer = document.createElement('div');
-        footer.className = 'alert-kit-footer';
 
         if (this.settings!.footerClass) {
             this.settings!.footerClass.forEach((className) => {
@@ -759,10 +833,13 @@ class AlertKit {
                     footer.classList.add(className.trim());
                 }
             });
+        } else if (this.settings!.footerClassName) {
+            footer.className = this.settings!.footerClassName;
         }
-
-        if (this.settings!.footerStyle) {
+        else if (this.settings!.footerStyle) {
             footer.setAttribute('style', this.settings!.footerStyle);
+        } else {
+            footer.className = 'alert-kit-footer';
         }
 
         if (this.settings!.footerInnerHTML) {
@@ -774,7 +851,6 @@ class AlertKit {
 
     createIconElement(): HTMLDivElement {
         const iconContainer = document.createElement('div');
-        iconContainer.className = `alert-kit-icon ${this.settings!.type}`;
 
         if (this.settings!.bodyIconClass) {
             this.settings!.bodyIconClass.forEach((className) => {
@@ -782,10 +858,11 @@ class AlertKit {
                     iconContainer.classList.add(className.trim());
                 }
             });
-        }
-
-        if (this.settings!.bodyIconStyle) {
+        } else if (this.settings!.bodyIconStyle) {
             iconContainer.setAttribute('style', this.settings!.bodyIconStyle);
+        } else {
+            iconContainer.className = `alert-kit-icon ${this.settings!.type}`;
+
         }
 
         if (this.settings!.bodyIconInnerHTML) {
@@ -811,10 +888,12 @@ class AlertKit {
                     titleElement.classList.add(className.trim());
                 }
             });
-        }
-
-        if (this.settings!.bodyTitleStyle) {
+        } else if (this.settings!.bodyTitleClassName) {
+            titleElement.className = this.settings!.bodyTitleClassName;
+        } else if (this.settings!.bodyTitleStyle) {
             titleElement.setAttribute('style', this.settings!.bodyTitleStyle);
+        } else {
+            titleElement.className = 'alert-kit-body-content-h2';
         }
 
         if (this.settings!.bodyTitleInnerHTML) {
@@ -835,10 +914,12 @@ class AlertKit {
                     this.messageElement!.classList.add(className.trim());
                 }
             });
-        }
-
-        if (this.settings!.bodyMessageStyle) {
+        } else if (this.settings!.bodyMessageClassName) {
+            this.messageElement.className = this.settings!.bodyMessageClassName;
+        } else if (this.settings!.bodyMessageStyle) {
             this.messageElement.setAttribute('style', this.settings!.bodyMessageStyle);
+        } else {
+            this.messageElement.className = 'alert-kit-body-content-p';
         }
 
         if (this.settings!.bodyMessageInnerHTML) {

@@ -7,7 +7,7 @@ export function injectAlertKitStyles() {
     const style = document.createElement('style');
     style.id = 'alert-kit-style';
     style.textContent = `
-    /* Alert Kit */
+            /* Alert Kit */
             /* Copyright (c) 2025 XanderLs <xanderlsdev@gmail.com> */
             /* MIT License */
             /* https://github.com/xanderlsdev/alert-kit */
@@ -59,7 +59,7 @@ export function injectAlertKitStyles() {
                 cursor: move;
             }
 
-            .alert-kit-header p {
+            .alert-kit-header .alert-kit-header-p {
                 margin: 0;
                 padding: 0;
                 font-size: 1rem;
@@ -195,7 +195,7 @@ export function injectAlertKitStyles() {
                 gap: 0.25rem;
             }
 
-            .alert-kit-body .alert-kit-body-content h2 {
+            .alert-kit-body .alert-kit-body-content .alert-kit-body-content-h2 {
                 color: inherit;
                 margin: 0;
                 font-size: 1.25rem;
@@ -203,7 +203,7 @@ export function injectAlertKitStyles() {
                 font-weight: 600;
             }
 
-            .alert-kit-body .alert-kit-body-content p {
+            .alert-kit-body .alert-kit-body-content .alert-kit-body-content-p {
                 color: inherit;
                 margin: 0;
                 font-size: 1rem;

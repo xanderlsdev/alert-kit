@@ -14,9 +14,10 @@ export type AlertKitButton = {
 export type AlertKitOptions = {
     overlayClass?: string[];
     overlayStyle?: string;
-    backdropBlur?: boolean;
+    overlayClassName?: string;
 
     contentClass?: string[];
+    contentClassName?: string;
     contentStyle?: string;
 
     headerVisible?: boolean;
@@ -26,14 +27,17 @@ export type AlertKitOptions = {
 
     headerTitleClass?: string[];
     headerTitleStyle?: string;
+    headerTitleClassName?: string;
     headerTitleInnerHTML?: string;
 
     headerCloseButtonClass?: string[];
     headerCloseButtonStyle?: string;
+    headerCloseButtonClassName?: string;
     headerCloseButtonInnerHTML?: string;
 
     bodyClass?: string[];
     bodyStyle?: string;
+    bodyClassName?: string;
     bodyInnerHTML?: string;
 
     bodyIconClass?: string[];
@@ -42,20 +46,24 @@ export type AlertKitOptions = {
 
     bodyTitleClass?: string[];
     bodyTitleStyle?: string;
+    bodyTitleClassName?: string;
     bodyTitleInnerHTML?: string;
 
     bodyMessageClass?: string[];
     bodyMessageStyle?: string;
+    bodyMessageClassName?: string;
     bodyMessageInnerHTML?: string;
 
     footerClass?: string[];
     footerStyle?: string;
+    footerClassName?: string;
     footerInnerHTML?: string;
 
     headerTitle?: string;
     title?: string;
     message?: string;
     type?: AlertKitType;
+    backdropBlur?: boolean;
     showCloseButton?: boolean;
     closeOnEsc?: boolean;
     closeOnClickOutside?: boolean;
