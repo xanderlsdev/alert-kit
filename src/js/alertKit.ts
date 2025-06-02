@@ -19,7 +19,7 @@ class AlertKit {
     private config: AlertKitConfig;
 
     private _name: string = 'Alert Kit';
-    private _version: string = '2.1.7';
+    private _version: string = '2.1.8';
     private icons: Icons;
     private focusableElements: HTMLElement[] = [];
     private firstFocusableElement: HTMLElement | null = null;

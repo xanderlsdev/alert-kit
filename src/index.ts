@@ -8,3 +8,5 @@ injectAlertKitStyles();
 const alertKit = new AlertKit();
 
 export { alertKit, AlertKitType };
+
+export default AlertKit;
