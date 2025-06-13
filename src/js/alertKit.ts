@@ -19,7 +19,7 @@ class AlertKit {
     private config: AlertKitConfig;
 
     private _name: string = 'Alert Kit';
-    private _version: string = '2.1.9';
+    private _version: string = '2.2.0';
     private icons: Icons;
     private focusableElements: HTMLElement[] = [];
     private firstFocusableElement: HTMLElement | null = null;
@@ -178,6 +178,8 @@ class AlertKit {
                 bodyContent.appendChild(this.createTitleElement());
                 bodyContent.appendChild(this.createMessageElement());
                 body.appendChild(bodyContent);
+            }else{
+                body.innerHTML = this.settings.bodyInnerHTML;
             }
             this.alertBox.appendChild(body);
 
@@ -492,6 +494,43 @@ class AlertKit {
             autoClose: false,
         } as AlertKitOptions;
 
+        this.show({ ...defaults, ...options });
+    }
+
+    html(options?: Partial<AlertKitOptions & {
+        primaryButton?: {
+            text?: string,
+            class?: string[],
+            className?: string,
+            style?: string,
+            html?: string
+        }
+    }>, callback?: () => void) {
+        const globalConfig = this.config.getDefaults();
+    
+        const defaultButton = {
+            text: globalConfig.defaultTexts?.ok || 'Ok',
+            onClick: () => callback?.(),
+            primary: true,
+            type: AlertKitType.info,
+        };
+    
+        const defaults = {
+            headerVisible: true,
+            backdropBlur: globalConfig.backdropBlur ?? true,
+            headerClassName: globalConfig.headerClassName,
+            headerTitle: globalConfig.headerTitle || this.name,
+            title: globalConfig.defaultTexts?.success || 'Html',
+            type: AlertKitType.info,
+            showCloseButton: globalConfig.showCloseButton ?? true,
+            closeOnEsc: globalConfig.closeOnEsc ?? true,
+            closeOnClickOutside: globalConfig.closeOnClickOutside ?? true,
+            isMoveable: globalConfig.isMoveable ?? true,
+            buttons: [this.createButtonWithDefaults(defaultButton, options?.primaryButton, 'primary')],
+            autoClose: false,
+            autoCloseTime: 0,
+        } as AlertKitOptions;
+    
         this.show({ ...defaults, ...options });
     }
 
