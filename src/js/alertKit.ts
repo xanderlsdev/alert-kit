@@ -19,7 +19,7 @@ class AlertKit {
     private config: AlertKitConfig;
 
     private _name: string = 'Alert Kit';
-    private _version: string = '2.1.8';
+    private _version: string = '2.1.9';
     private icons: Icons;
     private focusableElements: HTMLElement[] = [];
     private firstFocusableElement: HTMLElement | null = null;
@@ -726,10 +726,6 @@ class AlertKit {
     createHeader(): HTMLDivElement {
         const elementHeader = document.createElement('div');
 
-        if (this.settings!.isMoveable) {
-            elementHeader.classList.add('alert-kit-cursor-move');
-        }
-
         if (this.settings!.headerClass) {
             this.settings!.headerClass.forEach((className) => {
                 if (className.trim().length !== 0) {
@@ -742,8 +738,12 @@ class AlertKit {
             elementHeader.setAttribute('style', this.settings!.headerStyle);
         } else {
             elementHeader.className = 'alert-kit-header';
-        }
 
+            if (this.settings!.isMoveable) {
+                elementHeader.classList.add('alert-kit-cursor-move');
+            }
+    
+        }
         return elementHeader;
     }
 
@@ -871,8 +871,8 @@ class AlertKit {
             iconContainer.innerHTML = this.icons[this.settings!.type!];
             const svg = iconContainer.querySelector('svg');
             if (svg) {
-                svg.style.width = '60px';
-                svg.style.height = '60px';
+                svg.style.width = '50px';
+                svg.style.height = '50px';
             }
         }
 

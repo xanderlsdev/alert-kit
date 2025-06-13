@@ -198,7 +198,7 @@ export function injectAlertKitStyles() {
             .alert-kit-body .alert-kit-body-content .alert-kit-body-content-h2 {
                 color: inherit;
                 margin: 0;
-                font-size: 1.25rem;
+                font-size: 1.125rem;
                 line-height: 1.75rem;
                 font-weight: 600;
             }
@@ -214,7 +214,7 @@ export function injectAlertKitStyles() {
             .alert-kit-footer {
                 display: flex;
                 justify-content: flex-end;
-                padding: 0.87rem 1rem;
+                padding: 0rem 1rem 0.87rem 1rem;
             }
 
             .alert-kit-footer>* {
