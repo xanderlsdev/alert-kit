@@ -178,7 +178,7 @@ class AlertKit {
                 bodyContent.appendChild(this.createTitleElement());
                 bodyContent.appendChild(this.createMessageElement());
                 body.appendChild(bodyContent);
-            }else{
+            } else {
                 body.innerHTML = this.settings.bodyInnerHTML;
             }
             this.alertBox.appendChild(body);
@@ -444,45 +444,48 @@ class AlertKit {
             style?: string,
             html?: string
         }
-    }, callback?: (value: boolean) => void) {
-        const globalConfig = this.config.getDefaults();
+    }): Promise<boolean> {
+        return new Promise(resolve => {
+            const globalConfig = this.config.getDefaults();
 
-        const defaultAcceptButton = {
-            text: globalConfig.defaultTexts?.accept || 'Accept',
-            onClick: () => callback?.(true),
-            primary: true,
-            type: AlertKitType.question,
-        };
+            const defaultAcceptButton = {
+                text: globalConfig.defaultTexts?.accept || 'Accept',
+                onClick: () => resolve(true),   // 👉 resolvemos promesa
+                primary: true,
+                type: AlertKitType.question,
+            };
 
-        const defaultCancelButton = {
-            text: globalConfig.defaultTexts?.cancel || 'Cancel',
-            onClick: () => callback?.(false),
-            primary: false,
-            type: AlertKitType.error,
-        };
+            const defaultCancelButton = {
+                text: globalConfig.defaultTexts?.cancel || 'Cancel',
+                onClick: () => resolve(false),  // 👉 resolvemos promesa
+                primary: false,
+                type: AlertKitType.error,
+            };
 
-        const defaults = {
-            headerVisible: true,
-            backdropBlur: globalConfig.backdropBlur ?? true,
-            headerClassName: globalConfig.headerClassName,
-            headerTitle: globalConfig.headerTitle || this.name,
-            title: globalConfig.defaultTexts?.question || 'Question',
-            message: 'Message',
-            type: AlertKitType.question,
-            showCloseButton: false,
-            closeOnEsc: false,
-            closeOnClickOutside: false,
-            isMoveable: globalConfig.isMoveable ?? true,
-            buttons: [
-                this.createButtonWithDefaults(defaultAcceptButton, options.acceptButton, 'accept'),
-                this.createButtonWithDefaults(defaultCancelButton, options.cancelButton, 'cancel')
-            ],
-            autoClose: false,
-            autoCloseTime: 0,
-        } as AlertKitOptions;
+            const defaults = {
+                headerVisible: true,
+                backdropBlur: globalConfig.backdropBlur ?? true,
+                headerClassName: globalConfig.headerClassName,
+                headerTitle: globalConfig.headerTitle || this.name,
+                title: globalConfig.defaultTexts?.question || 'Question',
+                message: 'Message',
+                type: AlertKitType.question,
+                showCloseButton: false,
+                closeOnEsc: false,
+                closeOnClickOutside: false,
+                isMoveable: globalConfig.isMoveable ?? true,
+                buttons: [
+                    this.createButtonWithDefaults(defaultAcceptButton, options.acceptButton, 'accept'),
+                    this.createButtonWithDefaults(defaultCancelButton, options.cancelButton, 'cancel')
+                ],
+                autoClose: false,
+                autoCloseTime: 0,
+            } as AlertKitOptions;
 
-        this.show({ ...defaults, ...options });
+            this.show({ ...defaults, ...options });
+        });
     }
+
 
     loading(options: AlertKitOptions) {
         const defaults = {
@@ -507,14 +510,14 @@ class AlertKit {
         }
     }>, callback?: () => void) {
         const globalConfig = this.config.getDefaults();
-    
+
         const defaultButton = {
             text: globalConfig.defaultTexts?.ok || 'Ok',
             onClick: () => callback?.(),
             primary: true,
             type: AlertKitType.info,
         };
-    
+
         const defaults = {
             headerVisible: true,
             backdropBlur: globalConfig.backdropBlur ?? true,
@@ -530,7 +533,7 @@ class AlertKit {
             autoClose: false,
             autoCloseTime: 0,
         } as AlertKitOptions;
-    
+
         this.show({ ...defaults, ...options });
     }
 
@@ -781,7 +784,7 @@ class AlertKit {
             if (this.settings!.isMoveable) {
                 elementHeader.classList.add('alert-kit-cursor-move');
             }
-    
+
         }
         return elementHeader;
     }
