@@ -486,7 +486,6 @@ class AlertKit {
         });
     }
 
-
     loading(options: AlertKitOptions) {
         const defaults = {
             type: AlertKitType.loading,
@@ -1007,8 +1006,8 @@ class AlertKit {
 
             // Agrega el evento de clic, cerrando el overlay cuando se presiona el botón
             button.addEventListener('click', () => {
+                buttonConfig.onClick?.();
                 this.close(() => {
-                    buttonConfig.onClick?.();
                 });
             });
 
