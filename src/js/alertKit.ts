@@ -536,7 +536,7 @@ class AlertKit {
         this.show({ ...defaults, ...options });
     }
 
-    async close(callback?: () => void) {
+    close(callback?: () => void) {
         if (!this.overlay && !this.alertBox) return;
 
         this.alertBox!.classList.add('alert-kit-closing');
