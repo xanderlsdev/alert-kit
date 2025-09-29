@@ -255,8 +255,8 @@ class AlertKit {
             if (this.closeTimeout) {
                 clearTimeout(this.closeTimeout);
             }
-            this.closeTimeout = setTimeout(() => {
-                this.close();
+            this.closeTimeout = setTimeout(async () => {
+                await this.close();
             }, this.settings.autoCloseTime);
         }
 
@@ -536,44 +536,47 @@ class AlertKit {
         this.show({ ...defaults, ...options });
     }
 
-    close(callback?: () => void) {
+    async close(callback?: () => void) {
         if (!this.overlay && !this.alertBox) return;
 
         this.alertBox!.classList.add('alert-kit-closing');
-        this.alertBox!.addEventListener('animationend', () => {
+        await new Promise((resolve) => {
+            this.alertBox!.addEventListener('animationend', () => {
 
-            document.removeEventListener('keydown', this.boundEscapeHandler);
-            document.removeEventListener('keydown', this.boundFocusHandler);
-            this.overlay!.removeEventListener('mousedown', this.boundClickOutSideHandler);
-            window.removeEventListener('focus', this.boundFocusInSideHandler);
+                document.removeEventListener('keydown', this.boundEscapeHandler);
+                document.removeEventListener('keydown', this.boundFocusHandler);
+                this.overlay!.removeEventListener('mousedown', this.boundClickOutSideHandler);
+                window.removeEventListener('focus', this.boundFocusInSideHandler);
 
-            this.header?.removeEventListener('mousedown', this.boundMouseDownHandler);
-            document.removeEventListener('mousemove', this.boundMouseMoveHandler);
-            document.removeEventListener('mouseup', this.boundMouseUpHandler);
+                this.header?.removeEventListener('mousedown', this.boundMouseDownHandler);
+                document.removeEventListener('mousemove', this.boundMouseMoveHandler);
+                document.removeEventListener('mouseup', this.boundMouseUpHandler);
 
-            // Limpiar timeout si existe
-            if (this.closeTimeout) {
-                clearTimeout(this.closeTimeout);
-                this.closeTimeout = null;
-            }
+                // Limpiar timeout si existe
+                if (this.closeTimeout) {
+                    clearTimeout(this.closeTimeout);
+                    this.closeTimeout = null;
+                }
 
-            this.overlay!.remove();
-            document.body.style.overflow = 'auto';
+                this.overlay!.remove();
+                document.body.style.overflow = 'auto';
 
-            this.overlay = null;
-            this.alertBox = null;
+                this.overlay = null;
+                this.alertBox = null;
 
-            this.isDraggingHeader = false;
-            this.offsetX = 0;
-            this.offsetY = 0;
+                this.isDraggingHeader = false;
+                this.offsetX = 0;
+                this.offsetY = 0;
 
-            if (this.previousActiveElement) {
-                this.previousActiveElement.focus();
-            }
+                if (this.previousActiveElement) {
+                    this.previousActiveElement.focus();
+                }
 
-            callback?.();
-            this.settings?.onClose?.();
-        }, { once: true });
+                callback?.();
+                this.settings?.onClose?.();
+                resolve(true);
+            }, { once: true });
+        })
     }
 
 
@@ -837,7 +840,7 @@ class AlertKit {
             closeButton.innerHTML = '×';
         }
 
-        closeButton.addEventListener('click', () => this.close());
+        closeButton.addEventListener('click', async () => await this.close());
         return closeButton;
     }
 
@@ -1005,9 +1008,9 @@ class AlertKit {
             }
 
             // Agrega el evento de clic, cerrando el overlay cuando se presiona el botón
-            button.addEventListener('click', () => {
-                buttonConfig.onClick?.();
-                this.close(() => {
+            button.addEventListener('click', async () => {
+                await this.close(() => {
+                    buttonConfig.onClick?.();
                 });
             });
 
@@ -1047,9 +1050,9 @@ class AlertKit {
         }
     }
 
-    trapEscKey(e: KeyboardEvent) {
+    async trapEscKey(e: KeyboardEvent) {
         if (e.key === 'Escape') {
-            this.close();
+            await this.close();
         }
     }
 
@@ -1084,10 +1087,10 @@ class AlertKit {
         // }
     }
 
-    outSideClick(e: MouseEvent) {
+    async outSideClick(e: MouseEvent) {
         if (e.target === this.overlay) {
             e.preventDefault();
-            this.close();
+            await this.close();
         }
     }
 
