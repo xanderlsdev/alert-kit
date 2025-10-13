@@ -43,7 +43,6 @@ export function injectAlertKitStyles() {
                 /* animation: alertKitSlideIn 0.3s ease-out; */
                 animation: alertKitSlideIn 0.3s;
                 position: absolute;
-                cursor: default;
             }
 
             .alert-kit-header {
