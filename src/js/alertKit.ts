@@ -541,9 +541,6 @@ class AlertKit {
 
         this.alertBox!.classList.add('alert-kit-closing');
 
-        callback?.();
-        this.settings?.onClose?.();
-
         this.alertBox!.addEventListener('animationend', () => {
 
             document.removeEventListener('keydown', this.boundEscapeHandler);
@@ -571,11 +568,14 @@ class AlertKit {
             this.offsetX = 0;
             this.offsetY = 0;
 
-            if (this.previousActiveElement) {
-                this.previousActiveElement.focus();
-            }
+
         }, { once: true });
 
+        if (this.previousActiveElement) {
+            this.previousActiveElement.focus();
+        }
+        callback?.();
+        this.settings?.onClose?.();
     }
 
     static setGlobalDefaults(config: AlertKitGlobalConfig) {
