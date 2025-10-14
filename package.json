@@ -14,7 +14,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "prepare": "npm run build",
-    "patch": "npm version patch"
+    "patch": "npm version patch",
+    "publish": "npm publish"
   },
   "exports": {
     ".": {
