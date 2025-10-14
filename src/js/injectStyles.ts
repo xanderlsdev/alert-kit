@@ -27,6 +27,7 @@ export function injectAlertKitStyles() {
                 font-family: inherit;
                 font-size: 1rem;
                 color: inherit;
+                cursor: initial;
             }
 
             .alert-kit-overlay.alert-kit-backdrop-blur {
@@ -54,7 +55,7 @@ export function injectAlertKitStyles() {
                 border-bottom: 1px solid #dee2e6;
             }
 
-            .alert-kit-header.alert-kit-cursor-move {
+            .alert-kit-cursor-move{
                 cursor: move;
             }
 

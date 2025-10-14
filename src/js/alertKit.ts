@@ -774,10 +774,22 @@ class AlertKit {
                     elementHeader.classList.add(className.trim());
                 }
             });
+
+            if (this.settings!.isMoveable) {
+                elementHeader.classList.add('alert-kit-cursor-move');
+            }
         } else if (this.settings!.headerClassName) {
             elementHeader.className = this.settings!.headerClassName;
+            
+            if (this.settings!.isMoveable) {
+                elementHeader.classList.add('alert-kit-cursor-move');
+            }
         } else if (this.settings!.headerStyle) {
             elementHeader.setAttribute('style', this.settings!.headerStyle);
+
+            if (this.settings!.isMoveable) {
+                elementHeader.classList.add('alert-kit-cursor-move');
+            }
         } else {
             elementHeader.className = 'alert-kit-header';
 
